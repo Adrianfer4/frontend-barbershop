@@ -18,7 +18,6 @@ export default function LoginForm() {
 
   const validate = () => {
     const newErrors: typeof errors = {};
-    // const passwordRegex = /^(?=.*[a-zA-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
 
     if (!email) {
       newErrors.email = "El correo es obligatorio";
@@ -29,9 +28,6 @@ export default function LoginForm() {
     if (!password) {
       newErrors.password = "La contraseña es obligatoria";
     }
-    //  else if (!passwordRegex.test(password)) {
-    //   newErrors.password = "Mínimo 8 caracteres, incluye letras, números y símbolos";
-    // }
 
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
@@ -84,67 +80,64 @@ export default function LoginForm() {
   return (
     <form
       onSubmit={handleSubmit}
-      className="bg-white p-8 rounded-2xl shadow-xl  w-[300px] "
+      className="bg-white p-8 rounded-2xl shadow-xl w-[300px]"
     >
       <h2 className="text-2xl font-bold mb-6 text-center">Iniciar Sesión</h2>
 
-      <div className="mb-4">
-        <label className="block text-sm font-medium text-gray-700">
-          Correo electrónico
-        </label>
+      <div className="relative mb-2">
         <input
           type="email"
+          id="email"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
-          className="mt-1 p-3 w-full border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
+          className={`peer h-12 w-full border rounded-lg px-3 pt-4 text-sm placeholder-transparent focus:outline-none focus:ring-2 ${
+            errors.email
+              ? "border-red-500 focus:ring-red-300"
+              : "border-gray-300 focus:ring-blue-400"
+          }`}
           placeholder="E-mail"
         />
+        <label
+          htmlFor="email"
+          className="absolute left-3 top-2 text-sm text-gray-500 transition-all peer-placeholder-shown:top-3 peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-400 peer-focus:top-2 peer-focus:text-sm peer-focus:text-blue-500"
+        >
+          Correo electronico
+        </label>
         {errors.email && (
-          <p className="text-red-500 text-sm mt-1">{errors.email}</p>
+          <p className="text-red-500 text-xs mt-1">{errors.email}</p>
         )}
       </div>
 
-      <div className="mb-4">
-        <label className="block text-sm font-medium text-gray-700">
+      <div className="relative mb-4">
+        <input
+          type={showPassword ? "text" : "password"}
+          id="password"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          className={`peer h-12 w-full border rounded-lg px-3 pt-6 text-sm placeholder-transparent focus:outline-none focus:ring-2 ${
+            errors.password
+              ? "border-red-500 focus:ring-red-300"
+              : "border-gray-300 focus:ring-blue-400"
+          }`}
+          placeholder="Contraseña"
+        />
+        <button
+          type="button"
+          onClick={togglePasswordVisibility}
+          className="absolute right-2 top-1/3 -translate-y-1/5 text-gray-500"
+          tabIndex={-1}
+        >
+          {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+        </button>
+        <label
+          htmlFor="password"
+          className="absolute left-3 top-2 text-sm text-gray-500 transition-all peer-placeholder-shown:top-3 peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-400 peer-focus:top-2 peer-focus:text-sm peer-focus:text-blue-500"
+        >
           Contraseña
         </label>
-        <div className="relative">
-          <input
-            type={showPassword ? "text" : "password"}
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            className="mt-1 p-3 w-full border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
-            placeholder="Password"
-          />
-          <button
-            type="button"
-            onClick={togglePasswordVisibility}
-            className="absolute right-2 top-1/2 -translate-y-1/3 text-gray-500"
-            tabIndex={-1}
-          >
-            {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
-          </button>
-        </div>
         {errors.password && (
-          <p className="text-red-500 text-sm mt-1">{errors.password}</p>
+          <p className="text-red-500 text-xs mt-1">{errors.password}</p>
         )}
-      </div>
-
-      <div className="flex justify-between text-sm mb-4">
-        <button
-          type="button"
-          className="text-blue-500 hover:underline"
-          onClick={() => alert("Funcionalidad aún no implementada")}
-        >
-          ¿Olvidaste tu contraseña?
-        </button>
-        <button
-          type="button"
-          className="text-blue-500 hover:underline"
-          onClick={() => navigate("/register")}
-        >
-          Registrarse
-        </button>
       </div>
 
       <button
@@ -153,6 +146,25 @@ export default function LoginForm() {
       >
         Iniciar sesión
       </button>
+
+      <div className="text-center text-sm mb-2 p-2">
+        <button
+          type="button"
+          className="text-blue-500 hover:underline"
+          onClick={() => alert("Funcionalidad aún no implementada")}
+        >
+          ¿Olvidaste tu contraseña?
+        </button>
+      </div>
+      <div className="text-center text-sm mb-4">
+        <button
+          type="button"
+          className="text-blue-500 hover:underline"
+          onClick={() => navigate("/register")}
+        >
+          Registrarse
+        </button>
+      </div>
     </form>
   );
 }

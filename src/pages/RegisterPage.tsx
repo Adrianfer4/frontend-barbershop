@@ -1,14 +1,14 @@
-import LoginForm from "../components/LoginForm";
-import SideImage from "../components/ImageCard";
-export default function LoginPage() {
+import RegisterForm from "../components/RegisterForm";
+import ImageCard from "../components/ImageCard";
+export default function RegisterPage() {
   return (
     <div
       className="min-h-screen flex items-center justify-center bg-cover bg-center "
       style={{ backgroundImage: "url('/brick-wall.jpg')" }}
     >
       <div className="bg-white bg-opacity-90 rounded-3xl shadow-3xl flex flex-col-reverse lg:flex-row w-[43%] max-w-2xl ">
-        <LoginForm />
-        <SideImage imageUrl="/barberia-login.jpg" />
+        <ImageCard imageUrl="/barberia-register.jpg" position="left" height="h-[480px]" />
+        <RegisterForm />
       </div>
     </div>
   );
