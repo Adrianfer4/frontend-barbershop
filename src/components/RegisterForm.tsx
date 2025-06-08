@@ -8,7 +8,8 @@ export default function RegisterForm() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
-  const [showPassword, setShowPassword] = useState(false);
+  const [mostrarPass, setMostrarPass] = useState<boolean>(false);
+  const [mostrarConfirmar, setMostrarConfirmar] = useState<boolean>(false);
   const [errors, setErrors] = useState<{
     nombre?: string;
     apellido?: string;
@@ -18,10 +19,6 @@ export default function RegisterForm() {
   }>({});
 
   const navigate = useNavigate();
-
-  const togglePasswordVisibility = () => {
-    setShowPassword((prev) => !prev);
-  };
 
   const validate = () => {
     const newErrors: typeof errors = {};
@@ -81,9 +78,9 @@ export default function RegisterForm() {
   return (
     <form
       onSubmit={handleSubmit}
-      className="bg-white p-6 rounded-2xl shadow-xl w-[350px] h-[480px]"
+      className="bg-white px-8 py-4 rounded-2xl shadow-xl w-[350px] h-[500px]"
     >
-      <h2 className="text-2xl font-bold mb-4 text-center">Registrarse</h2>
+      <h2 className="text-2xl font-bold mb-2 text-center">Registrarse</h2>
 
       <div className="relative mb-2">
         <input
@@ -91,7 +88,7 @@ export default function RegisterForm() {
           id="nombre"
           value={nombre}
           onChange={(e) => setNombre(e.target.value)}
-          className={`peer h-10 w-full border rounded-lg px-3 pt-4 text-sm placeholder-transparent focus:outline-none focus:ring-2 ${
+          className={`peer h-12 w-full border rounded-lg px-3 pt-4 text-sm placeholder-transparent focus:outline-none focus:ring-2 ${
             errors.nombre
               ? "border-red-500 focus:ring-red-300"
               : "border-gray-300 focus:ring-blue-400"
@@ -116,7 +113,7 @@ export default function RegisterForm() {
           value={apellido}
           onChange={(e) => setApellido(e.target.value)}
           className={
-            "peer h-10 w-full border rounded-lg px-3 pt-4 text-sm placeholder-transparent focus:outline-none focus:ring-2 border-gray-300"
+            "peer h-12 w-full border rounded-lg px-3 pt-4 text-sm placeholder-transparent focus:outline-none focus:ring-2 border-gray-300"
           }
           placeholder="Apellido"
         />
@@ -134,7 +131,7 @@ export default function RegisterForm() {
           id="email"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
-          className={`peer h-10 w-full border rounded-lg px-3 pt-4 text-sm placeholder-transparent focus:outline-none focus:ring-2 ${
+          className={`peer h-12 w-full border rounded-lg px-3 pt-4 text-sm placeholder-transparent focus:outline-none focus:ring-2 ${
             errors.email
               ? "border-red-500 focus:ring-red-300"
               : "border-gray-300 focus:ring-blue-400"
@@ -154,11 +151,11 @@ export default function RegisterForm() {
 
       <div className="relative mb-2">
         <input
-          type={showPassword ? "text" : "password"}
+          type={mostrarPass ? "text" : "password"}
           id="password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
-          className={`peer h-10 w-full border rounded-lg px-3 pt-4 text-sm placeholder-transparent focus:outline-none focus:ring-2 ${
+          className={`peer h-12 w-full border rounded-lg px-3 pt-4 text-sm placeholder-transparent focus:outline-none focus:ring-2 ${
             errors.password
               ? "border-red-500 focus:ring-red-300"
               : "border-gray-300 focus:ring-blue-400"
@@ -167,11 +164,11 @@ export default function RegisterForm() {
         />
         <button
           type="button"
-          onClick={togglePasswordVisibility}
+          onClick={() => setMostrarPass((prev) => !prev)}
           className="absolute right-2 top-1/3 -translate-y-1/3 text-gray-500"
           tabIndex={-1}
         >
-          {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+          {mostrarPass ? <EyeOff size={20} /> : <Eye size={20} />}
         </button>
         <label
           htmlFor="password"
@@ -186,11 +183,11 @@ export default function RegisterForm() {
 
       <div className="relative mb-4">
         <input
-          type={showPassword ? "text" : "password"}
+          type={mostrarConfirmar ? "text" : "password"}
           id="confirmPassword"
           value={confirmPassword}
           onChange={(e) => setConfirmPassword(e.target.value)}
-          className={`peer h-10 w-full border rounded-lg px-3 pt-4 text-sm placeholder-transparent focus:outline-none focus:ring-2 ${
+          className={`peer h-12 w-full border rounded-lg px-3 pt-4 text-sm placeholder-transparent focus:outline-none focus:ring-2 ${
             errors.email
               ? "border-red-500 focus:ring-red-300"
               : "border-gray-300 focus:ring-blue-400"
@@ -199,11 +196,11 @@ export default function RegisterForm() {
         />
         <button
           type="button"
-          onClick={togglePasswordVisibility}
+          onClick={() => setMostrarConfirmar((prev) => !prev)}
           className="absolute right-2 top-1/3 -translate-y-1/3 text-gray-500"
           tabIndex={-1}
         >
-          {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+          {mostrarConfirmar ? <EyeOff size={20} /> : <Eye size={20} />}
         </button>
         <label
           htmlFor="confirmPassword"
@@ -218,7 +215,7 @@ export default function RegisterForm() {
 
       <button
         type="submit"
-        className="bg-blue-600 text-white py-1 rounded-lg w-full hover:bg-blue-700 transition"
+        className="bg-blue-600 text-white py-2 rounded-lg w-full hover:bg-blue-700 transition"
       >
         Registrarse
       </button>
