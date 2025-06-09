@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Eye, EyeOff } from "lucide-react";
+import Swal from "sweetalert2";
 
 export default function RegisterForm() {
   const [nombre, setNombre] = useState("");
@@ -65,13 +66,30 @@ export default function RegisterForm() {
       if (!response.ok) {
         const errorData = await response.json();
         setErrors({ email: errorData.message || "Error al registrarse" });
+
+        Swal.fire({
+          icon: "error",
+          title: "Registro fallido",
+          text: errorData.message || "No se pudo registrar el usuario.",
+        });
         return;
       }
-      alert("Registro exitoso. Revisa tu correo para verificar la cuenta.");
-      navigate("/login");
+
+      Swal.fire({
+        icon: "success",
+        title: "Registro exitoso",
+        text: "Revisa tu correo electrónico para verificar la cuenta.",
+        confirmButtonText: "Entendido",
+      }).then(() => {
+        navigate("/login");
+      });
     } catch (error) {
       console.error("Error al registrar:", error);
-      alert("Error al conectar con el servidor.");
+      Swal.fire({
+        icon: "error",
+        title: "Error de conexión",
+        text: "No se pudo conectar con el servidor. Intenta más tarde.",
+      });
     }
   };
 

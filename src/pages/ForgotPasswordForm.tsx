@@ -1,4 +1,5 @@
 import { useState } from "react";
+import Swal from "sweetalert2";
 
 export default function ForgotPasswordForm() {
   const [email, setEmail] = useState<string>("");
@@ -24,12 +25,23 @@ export default function ForgotPasswordForm() {
       if (!res.ok) throw new Error(data.error || "Error al enviar el correo");
 
       setMensaje(data.mensaje);
+
+      Swal.fire({
+        icon: "success",
+        title: "Correo enviado",
+        text: data.mensaje || "Revisa tu correo para restablecer la contraseña",
+      });
     } catch (err: unknown) {
-      if (err instanceof Error) {
-        setError(err.message);
-      } else {
-        setError("Error desconocido");
-      }
+      let message = "Error desconocido";
+      if (err instanceof Error) message = err.message;
+
+      setError(message);
+
+      Swal.fire({
+        icon: "error",
+        title: "Error",
+        text: message,
+      });
     }
   };
 

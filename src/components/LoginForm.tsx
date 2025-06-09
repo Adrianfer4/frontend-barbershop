@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Eye, EyeOff } from "lucide-react";
+import Swal from "sweetalert2";
 
 export default function LoginForm() {
   const [email, setEmail] = useState("");
@@ -55,6 +56,12 @@ export default function LoginForm() {
           password: errorData.message || "Error al iniciar sesión",
         });
 
+        Swal.fire({
+          icon: "error",
+          title: "Inicio de sesión fallido",
+          text: errorData.message || "Credenciales incorrectas.",
+        });
+
         setPassword("");
         return;
       }
@@ -65,6 +72,14 @@ export default function LoginForm() {
       localStorage.setItem("token", data.token);
       localStorage.setItem("usuario", JSON.stringify(data.usuario));
 
+      Swal.fire({
+        icon: "success",
+        title: "Bienvenido",
+        text: `Hola ${data.usuario.nombre || data.usuario.email}!`,
+        timer: 2000,
+        showConfirmButton: false,
+      });
+
       // Redirigir según el rol
       if (data.usuario.rol === "admin") {
         navigate("/adminPanel");
@@ -73,7 +88,11 @@ export default function LoginForm() {
       }
     } catch (error) {
       console.error("Error al iniciar sesión:", error);
-      alert("Error al conectar con el servidor.");
+      Swal.fire({
+        icon: "error",
+        title: "Error de conexión",
+        text: "No se pudo conectar con el servidor. Intenta nuevamente más tarde.",
+      });
     }
   };
 
@@ -151,7 +170,7 @@ export default function LoginForm() {
         <button
           type="button"
           className="text-blue-500 hover:underline"
-          onClick={() => alert("Funcionalidad aún no implementada")}
+          onClick={() => navigate("/forgot-password")}
         >
           ¿Olvidaste tu contraseña?
         </button>

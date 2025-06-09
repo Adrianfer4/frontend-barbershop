@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Eye, EyeOff } from "lucide-react"; // Asegúrate de tener lucide-react instalado
+import Swal from "sweetalert2";
 
 export default function ResetPasswordForm() {
   const [password, setPassword] = useState<string>("");
@@ -33,6 +34,11 @@ export default function ResetPasswordForm() {
 
     if (password !== confirmar) {
       setError("Las contraseñas no coinciden");
+      Swal.fire({
+        icon: "warning",
+        title: "Contraseñas no coinciden",
+        text: "Por favor, verifica que ambas contraseñas sean iguales.",
+      });
       return;
     }
 
@@ -44,15 +50,29 @@ export default function ResetPasswordForm() {
       });
 
       const data = await res.json();
-      if (!res.ok) throw new Error(data.error || "Error al actualizar contraseña");
+      if (!res.ok)
+        throw new Error(data.error || "Error al actualizar contraseña");
 
       setMensaje(data.mensaje);
+
+      Swal.fire({
+        icon: "success",
+        title: "Contraseña actualizada",
+        text:
+          data.mensaje || "Tu contraseña ha sido restablecida correctamente.",
+      });
+
+      setPassword("");
+      setConfirmar("");
     } catch (err: unknown) {
-      if (err instanceof Error) {
-        setError(err.message);
-      } else {
-        setError("Error desconocido");
-      }
+      const message = err instanceof Error ? err.message : "Error desconocido";
+      setError(message);
+
+      Swal.fire({
+        icon: "error",
+        title: "Error",
+        text: message,
+      });
     }
   };
 
@@ -119,7 +139,9 @@ export default function ResetPasswordForm() {
           </button>
         </form>
 
-        {mensaje && <p className="text-green-600 mt-4 text-center">{mensaje}</p>}
+        {mensaje && (
+          <p className="text-green-600 mt-4 text-center">{mensaje}</p>
+        )}
         {error && <p className="text-red-600 mt-4 text-center">{error}</p>}
       </div>
     </div>
