@@ -1,10 +1,26 @@
+import { useState } from "react";
 import AdminLayout from "../../components/layout/AdminLayout";
+import Servicios from "../../components/admin/Servicios";
 
 export default function Dashboard() {
+  const [vista, setVista] = useState("dashboard");
+
+  const renderVista = () => {
+    switch (vista) {
+      case "dashboard":
+        return <div>Bienvenido al panel de control</div>;
+        case "clientes":
+        return <div>Componente Clientes</div>;
+      case "servicios":
+        return <Servicios />;
+      default:
+        return null;
+    }
+  };
+
   return (
-    <AdminLayout>
-      <h2 className="text-2xl font-bold mb-4 text-white ">Bienvenido al panel</h2>
-      <p>Desde aquí puedes administrar los clientes y servicios.</p>
+    <AdminLayout vistaActual={vista} onSeleccionarVista={setVista}>
+      {renderVista()}
     </AdminLayout>
   );
 }

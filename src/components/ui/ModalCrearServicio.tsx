@@ -17,8 +17,8 @@ export default function ModalCrearServicio({
   if (!show) return null;
 
   return (
-    <div className="fixed inset-0  bg-opacity-50 flex items-center justify-center z-50 bg-[url('/brick-wall.jpg')]">
-      <div className="bg-white p-6 rounded-lg w-full max-w-lg shadow-xl relative">
+    <div className="fixed inset-0  bg-opacity-50 flex items-center justify-center z-50 bg-[#f4eee8]">
+      <div className="bg-gray-100 p-6 rounded-lg max-w-lg shadow-xl relative">
         {title && (
           <h2 className="text-xl font-bold mb-4 text-center text-gray-800">
             {title}

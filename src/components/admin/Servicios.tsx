@@ -1,6 +1,6 @@
 // src/pages/dashboard/Servicios.tsx
 import { useEffect, useState } from "react";
-import ModalCrearServicio from "../../components/ui/ModalCrearServicio";
+import ModalCrearServicio from "../ui/ModalCrearServicio";
 import Swal from "sweetalert2";
 
 interface Servicio {
@@ -151,10 +151,7 @@ export default function Servicios() {
   };
 
   return (
-    <div
-      className="min-h-screen bg-gray-100"
-      style={{ backgroundImage: "url('/bric-wall.jpg')" }}
-    >
+    <div className="min-h-screen bg-gray-100">
       <div className="p-6">
         <h1 className="text-2xl font-bold mb-4">Gestión de Servicios</h1>
 
@@ -341,7 +338,7 @@ export default function Servicios() {
                 </button>
                 <button
                   type="submit"
-                  className="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700"
+                  className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
                 >
                   Guardar Cambios
                 </button>
@@ -351,12 +348,14 @@ export default function Servicios() {
         )}
 
         {/* Botón flotante para abrir el modal */}
-        <button
-          onClick={() => setShowModal(true)}
-          className="fixed bottom-6 right-6 bg-blue-600 text-white px-4 py-3 rounded-full shadow-lg hover:bg-blue-700 z-50"
-        >
-          + Crear Servicio
-        </button>
+        {!showModal && (
+          <button
+            onClick={() => setShowModal(true)}
+            className="fixed bottom-6 right-6 bg-blue-600 text-white px-4 py-3 rounded-full shadow-lg hover:bg-blue-700 z-50"
+          >
+            + Crear Servicio
+          </button>
+        )}
       </div>
     </div>
   );
