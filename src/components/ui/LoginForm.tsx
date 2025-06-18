@@ -82,7 +82,7 @@ export default function LoginForm() {
 
       // Redirigir según el rol
       if (data.usuario.rol === "admin") {
-        navigate("/adminPanel");
+        navigate("/admin/dashboard");
       } else {
         navigate("/inicio");
       }

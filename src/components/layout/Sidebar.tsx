@@ -35,7 +35,7 @@ export function Sidebar({
         <img
           src="/sidebar.jpg"
           alt="Fondo"
-          className="absolute inset-0 h-full w-full object-cover z-0"
+          className="absolute inset-0 h-full w-full z-0"
         />
         <div className="absolute inset-0 bg-black/40 z-10" />
         <div className="relative z-20 p-6 space-y-4">

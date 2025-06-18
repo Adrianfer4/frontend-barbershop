@@ -1,5 +1,5 @@
-import LoginForm from "../components/LoginForm";
-import SideImage from "../components/ImageCard";
+import LoginForm from "../../components/ui/LoginForm";
+import SideImage from "../../components/ui/ImageCard";
 export default function LoginPage() {
   return (
     <div

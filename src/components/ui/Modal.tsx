@@ -8,7 +8,7 @@ interface ModalProps {
   children: ReactNode;
 }
 
-export default function ModalCrearServicio({
+export default function ModalServicio({
   show,
   onClose,
   title,

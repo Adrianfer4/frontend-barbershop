@@ -1,6 +1,7 @@
 import { useState } from "react";
 import AdminLayout from "../../components/layout/AdminLayout";
 import Servicios from "../../components/admin/Servicios";
+import Clientes from "../../components/admin/Clientes";
 
 export default function Dashboard() {
   const [vista, setVista] = useState("dashboard");
@@ -10,7 +11,7 @@ export default function Dashboard() {
       case "dashboard":
         return <div>Bienvenido al panel de control</div>;
         case "clientes":
-        return <div>Componente Clientes</div>;
+        return <Clientes />;
       case "servicios":
         return <Servicios />;
       default:

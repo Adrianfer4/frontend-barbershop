@@ -1,5 +1,5 @@
-import RegisterForm from "../components/RegisterForm";
-import ImageCard from "../components/ImageCard";
+import RegisterForm from "../../components/ui/RegisterForm";
+import ImageCard from "../../components/ui/ImageCard";
 export default function RegisterPage() {
   return (
     <div

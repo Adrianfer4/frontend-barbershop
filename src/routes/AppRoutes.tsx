@@ -1,8 +1,8 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import Login from "../pages/LoginPage";
-import Register from "../pages/RegisterPage";
-import ForgotPasswordForm from "../pages/ForgotPasswordForm";
-import ResetPasswordForm from "../pages/ResetPasswordForm";
+import Login from "../pages/client/LoginPage";
+import Register from "../pages/client/RegisterPage";
+import ForgotPasswordForm from "../pages/client/ForgotPasswordForm";
+import ResetPasswordForm from "../pages/client/ResetPasswordForm";
 import Dashboard from "../pages/admin/dashboard";
 
 function AppRoutes() {
