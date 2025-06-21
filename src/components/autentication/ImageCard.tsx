@@ -1,7 +1,7 @@
 interface ImageCardProps {
-  imageUrl: string;           // Ruta local importada o URL externa
-  position?: "left" | "right"; // Lado donde va el borde redondeado
-  height?: string;             // Altura opcional (ej: h-[400px])
+  imageUrl: string; 
+  position?: "left" | "right";
+  height?: string;        
 }
 
 export default function ImageCard({

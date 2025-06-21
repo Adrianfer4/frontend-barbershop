@@ -1,5 +1,5 @@
-import RegisterForm from "../../components/ui/RegisterForm";
-import ImageCard from "../../components/ui/ImageCard";
+import RegisterForm from "../../components/autentication/RegisterForm";
+import ImageCard from "../../components/autentication/ImageCard";
 export default function RegisterPage() {
   return (
     <div
@@ -7,7 +7,11 @@ export default function RegisterPage() {
       style={{ backgroundImage: "url('/brick-wall.jpg')" }}
     >
       <div className="bg-white bg-opacity-90 rounded-3xl shadow-3xl flex flex-col-reverse lg:flex-row w-[43%] max-w-2xl ">
-        <ImageCard imageUrl="/barberia-register.jpg" position="left" height="h-[500px]" />
+        <ImageCard
+          imageUrl="/barberia-register.jpg"
+          position="left"
+          height="h-[500px]"
+        />
         <RegisterForm />
       </div>
     </div>

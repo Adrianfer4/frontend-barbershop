@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import ModalCliente from "../ui/Modal";
+import ModalCliente from "../crud/Modal";
 import Swal from "sweetalert2";
 
 interface Cliente {
@@ -228,6 +228,7 @@ export default function Clientes() {
               >
                 <option value="cliente">Cliente</option>
                 <option value="admin">Admin</option>
+                <option value="barbershop">Barbershop</option>
               </select>
               <div className="flex justify-end gap-2">
                 <button
@@ -317,6 +318,7 @@ export default function Clientes() {
               >
                 <option value="cliente">Cliente</option>
                 <option value="admin">Admin</option>
+                <option value="barbershop">Barbershop</option>
               </select>
               <div className="flex justify-end gap-2">
                 <button

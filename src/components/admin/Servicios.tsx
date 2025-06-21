@@ -1,6 +1,6 @@
 // src/pages/dashboard/Servicios.tsx
 import { useEffect, useState } from "react";
-import ModalServicio from "../ui/Modal";
+import ModalServicio from "../crud/Modal";
 import Swal from "sweetalert2";
 
 interface Servicio {
@@ -9,6 +9,7 @@ interface Servicio {
   descripcion: string;
   precio: number;
   duracion: string;
+  imagen?: string | File;
 }
 
 export default function Servicios() {
@@ -22,11 +23,7 @@ export default function Servicios() {
   const [descripcion, setDescripcion] = useState("");
   const [precio, setPrecio] = useState(0);
   const [duracion, setDuracion] = useState("");
-
-  const abrirModalEdicion = (servicio: Servicio) => {
-    setServicioEditado(servicio);
-    setShowEditModal(true);
-  };
+  const [imagen, setImagen] = useState<File | null>(null);
 
   const fetchServicios = async () => {
     try {
@@ -42,18 +39,53 @@ export default function Servicios() {
     fetchServicios();
   }, []);
 
+  useEffect(() => {
+    if (!showModal) {
+      setNombre("");
+      setDescripcion("");
+      setPrecio(0);
+      setDuracion("");
+      setImagen(null);
+    }
+  }, [showModal]);
+
+  const convertirHoraAminutos = (duracion: string): string => {
+    const [horas, minutos] = duracion.split(":").map(Number);
+    return (horas * 60 + minutos).toString();
+  };
+
+  const abrirModalEdicion = (servicio: Servicio) => {
+    const duracionMinutos = convertirHoraAminutos(servicio.duracion);
+    setServicioEditado({ ...servicio, duracion: duracionMinutos });
+    setShowEditModal(true);
+  };
+
+  // Convierte minutos a formato hh:mm:ss
+  const convertirMinutosAFormatoHora = (minutos: number) => {
+    const horas = Math.floor(minutos / 60);
+    const mins = minutos % 60;
+    return `${horas.toString().padStart(2, "0")}:${mins
+      .toString()
+      .padStart(2, "0")}:00`;
+  };
+
   const handleCrearServicio = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
+      const formData = new FormData();
+      formData.append("nombre_servicio", nombre);
+      formData.append("descripcion", descripcion);
+      formData.append("precio", precio.toString());
+      formData.append(
+        "duracion",
+        convertirMinutosAFormatoHora(parseInt(duracion))
+      );
+
+      if (imagen) formData.append("imagen", imagen);
+
       const res = await fetch("http://localhost:3000/api/servicios", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          nombre_servicio: nombre,
-          descripcion,
-          precio,
-          duracion,
-        }),
+        body: formData,
       });
 
       if (!res.ok) throw new Error("Error al crear servicio");
@@ -65,6 +97,7 @@ export default function Servicios() {
       setDescripcion("");
       setPrecio(0);
       setDuracion("");
+      setImagen(null);
       setShowModal(false);
       Swal.fire({
         icon: "success",
@@ -86,24 +119,32 @@ export default function Servicios() {
     if (!servicioEditado) return;
 
     try {
+      const formData = new FormData();
+      formData.append("nombre_servicio", servicioEditado.nombre_servicio);
+      formData.append("descripcion", servicioEditado.descripcion);
+      formData.append("precio", servicioEditado.precio.toString());
+      formData.append(
+        "duracion",
+        convertirMinutosAFormatoHora(parseInt(servicioEditado.duracion))
+      );
+      if (servicioEditado.imagen instanceof File) {
+        formData.append("imagen", servicioEditado.imagen);
+      }
+
       const res = await fetch(
         `http://localhost:3000/api/servicios/${servicioEditado.id_servicio}`,
         {
           method: "PUT",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(servicioEditado),
+          body: formData,
         }
       );
 
       if (!res.ok) throw new Error("Error al editar servicio");
 
-      // Refrescar la lista completa
-      const actualizados = await fetch(
-        "http://localhost:3000/api/servicios"
-      ).then((res) => res.json());
-      setServicios(actualizados);
+      await fetchServicios();
       setShowEditModal(false);
       setServicioEditado(null);
+
       Swal.fire({
         icon: "success",
         title: "Servicio actualizado",
@@ -192,12 +233,12 @@ export default function Servicios() {
         </table>
 
         {/* Modal Crear */}
-      <button
-        onClick={() => setShowModal(true)}
-        className="mt-4 bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
-      >
-        + Crear Servicio
-      </button>
+        <button
+          onClick={() => setShowModal(true)}
+          className="mt-4 bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
+        >
+          + Crear Servicio
+        </button>
 
         {/* Modal para crear servicio */}
         {showModal && (
@@ -233,7 +274,7 @@ export default function Servicios() {
                 <input
                   type="number"
                   step="0.01"
-                  min="0"
+                  min="1"
                   placeholder="Precio"
                   value={precio}
                   onChange={(e) => setPrecio(Number(e.target.value))}
@@ -242,12 +283,48 @@ export default function Servicios() {
                 />
               </div>
               <input
-                type="time"
+                type="number"
+                placeholder="Duración en minutos"
                 value={duracion}
                 onChange={(e) => setDuracion(e.target.value)}
+                min={1}
                 required
                 className="w-full border p-2 rounded"
               />
+              <label className="block w-full">
+                <span className="text-sm font-medium text-gray-700">
+                  Imagen del servicio
+                </span>
+                <div className="mt-1 flex items-center gap-4">
+                  <label
+                    htmlFor="imagen"
+                    className="cursor-pointer inline-flex items-center px-4 py-2 bg-white text-sm font-medium text-gray-600 border border-gray-300 rounded-lg shadow-sm hover:bg-gray-50 transition duration-150"
+                  >
+                    📁 Subir imagen
+                  </label>
+                  <span className="text-sm text-gray-500 italic">
+                    Formato JPG, PNG o WEBP
+                  </span>
+                </div>
+                <input
+                  id="imagen"
+                  name="imagen"
+                  type="file"
+                  accept="image/*"
+                  onChange={(e) => {
+                    const file = e.target.files?.[0];
+                    if (file) setImagen(file);
+                  }}
+                  className="hidden"
+                />
+                {imagen && (
+                  <p className="mt-2 text-sm text-gray-500 italic">
+                    Archivo seleccionado:{" "}
+                    <span className="font-medium">{imagen.name}</span>
+                  </p>
+                )}
+              </label>
+
               <div className="flex justify-end space-x-2 mt-6">
                 <button
                   type="button"
@@ -324,7 +401,8 @@ export default function Servicios() {
                 />
               </div>
               <input
-                type="time"
+                type="number"
+                placeholder="Duración en minutos"
                 value={servicioEditado.duracion}
                 onChange={(e) =>
                   setServicioEditado({
@@ -335,6 +413,52 @@ export default function Servicios() {
                 required
                 className="w-full border p-2 rounded"
               />
+              <label className="block w-full">
+                <span className="text-sm font-medium text-gray-700">
+                  Imagen del servicio
+                </span>
+                <div className="mt-1 flex items-center gap-4">
+                  <label
+                    htmlFor="imagen"
+                    className="cursor-pointer inline-flex items-center px-4 py-2 bg-white text-sm font-medium text-gray-600 border border-gray-300 rounded-lg shadow-sm hover:bg-gray-50 transition duration-150"
+                  >
+                    📁 Cambiar imagen
+                  </label>
+                  <span className="text-sm text-gray-500 italic">
+                    Formato JPG, PNG o WEBP
+                  </span>
+                </div>
+                <input
+                  type="file"
+                  id="imagen"
+                  name="imagen"
+                  accept="image/*"
+                  onChange={(e) => {
+                    const file = e.target.files?.[0];
+                    if (file) {
+                      setServicioEditado({ ...servicioEditado, imagen: file });
+                    }
+                  }}
+                  className="hidden"
+                />
+                {typeof servicioEditado.imagen === "string" && (
+                  <p className="mt-2 text-sm text-gray-500 italic">
+                    Imagen actual:{" "}
+                    <span className="font-medium">
+                      {servicioEditado.imagen}
+                    </span>
+                  </p>
+                )}
+
+                {servicioEditado.imagen instanceof File && (
+                  <p className="mt-2 text-sm text-gray-500 italic">
+                    Nueva imagen:{" "}
+                    <span className="font-medium">
+                      {servicioEditado.imagen.name}
+                    </span>
+                  </p>
+                )}
+              </label>
               <div className="flex justify-end space-x-2 mt-6">
                 <button
                   type="button"

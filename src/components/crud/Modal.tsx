@@ -1,4 +1,3 @@
-// src/components/ui/Modal.tsx
 import type { ReactNode } from "react";
 
 interface ModalProps {
@@ -8,7 +7,7 @@ interface ModalProps {
   children: ReactNode;
 }
 
-export default function ModalServicio({
+export default function Modal({
   show,
   onClose,
   title,
@@ -17,7 +16,7 @@ export default function ModalServicio({
   if (!show) return null;
 
   return (
-    <div className="fixed inset-0  bg-opacity-50 flex items-center justify-center z-50 bg-[#f4eee8]">
+    <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50">
       <div className="bg-gray-100 p-6 rounded-lg max-w-lg shadow-xl relative">
         {title && (
           <h2 className="text-xl font-bold mb-4 text-center text-gray-800">
