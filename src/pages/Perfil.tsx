@@ -174,16 +174,16 @@ const Perfil = () => {
     <div className="min-h-screen flex flex-col md:flex-row bg-gradient-to-br from-yellow-50 to-amber-100 text-gray-800">
       {/* Sidebar */}
       <aside className="w-full md:w-1/3 p-6 bg-amber-200 shadow-md flex flex-col items-center gap-4">
-        <div className="w-20 h-20 rounded-full overflow-hidden flex items-center justify-center bg-amber-100 shadow">
-          {usuario.foto_perfil ? (
-            <img
-              src={`http://localhost:3000/uploads/usuarios/${usuario.foto_perfil}`}
-              alt="Foto de perfil"
-              className="w-full h-full object-cover"
-            />
-          ) : (
-            <FaUserCircle className="text-amber-500  w-32 h-32" />
-          )}
+        <div className="relative w-32 h-32 rounded-full overflow-hidden border-4 border-amber-500 shadow-lg">
+            {usuario.foto_perfil ? (
+              <img
+                src={`http://localhost:3000/uploads/usuarios/${usuario.foto_perfil}`}
+                alt="Foto de perfil"
+                className="w-full h-full object-cover"
+              />
+            ) : (
+              <FaUserCircle className="text-amber-500  w-30 h-30 shadow-lg" />
+            )}
 
           <label className="absolute bottom-0 w-full text-center bg-black/60 text-white text-xs cursor-pointer py-1 hover:bg-amber-600 transition">
             Cambiar

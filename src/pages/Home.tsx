@@ -1,8 +1,9 @@
 import Navbar from "../components/ui/Navbar";
-import Hero from "../components/ui/Hero";
+import HeroAnimado from "../components/ui/Hero";
 import Nosotros from "../components/ui/Nosotros";
 import ServicioSection from "../components/ui/ServicioSection";
 import Footer from "../components/ui/Footer";
+import ContactSection from "../components/ui/Contacto";
 import WhatsAppFloating from "../components/ui/WhatsappFloating";
 
 const Home = () => {
@@ -13,9 +14,10 @@ const Home = () => {
         style={{ backgroundImage: "url('/fachada.jpeg')" }}
       />
       <Navbar />
-      <Hero />
+      <HeroAnimado />
       <Nosotros />
       <ServicioSection />
+      <ContactSection />
       <Footer />
       <WhatsAppFloating />
     </main>
