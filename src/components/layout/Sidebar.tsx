@@ -15,6 +15,7 @@ export function Sidebar({
     { id: "dashboard", label: "Dashboard" },
     { id: "clientes", label: "Clientes" },
     { id: "servicios", label: "Servicios" },
+    { id: "citas", label: "Citas" },
   ];
 
   return (

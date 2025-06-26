@@ -22,7 +22,8 @@ const ServicioSection = () => {
 
   return (
     <section className="p-6">
-      <h2 id="servicios" className="text-2xl text-amber-800 font-semibold text-center mb-6">
+      <h2 id="servicios" className="text-4xl text-white font-bold text-center mb-6 font-[Reey]"
+      style={{ fontFamily: "Reey-Regular, cursive" }}>
         Nuestros Servicios
       </h2>
 

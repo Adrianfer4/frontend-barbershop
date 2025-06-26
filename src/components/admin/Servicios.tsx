@@ -192,7 +192,7 @@ export default function Servicios() {
   };
 
   return (
-    <div className="bg-gray-100">
+    <div className="bg-gray-100 rounded-xl">
       <div className="p-6">
         <h1 className="text-2xl font-bold mb-4">Gestión de Servicios</h1>
 

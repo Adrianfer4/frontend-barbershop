@@ -24,7 +24,7 @@ export default function AdminLayout({ children, vistaActual, onSeleccionarVista 
       />
 
       {/* Contenido principal */}
-      <main className="flex-1 p-6 overflow-y-auto">
+      <main className="flex-1 p-6 overflow-y-auto ">
         {/* Botón hamburguesa visible solo en móvil */}
         <button
           className="md:hidden text-2xl mb-4"

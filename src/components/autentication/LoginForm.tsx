@@ -84,7 +84,7 @@ export default function LoginForm() {
       if (data.usuario.rol === "admin") {
         navigate("/admin/dashboard");
       } else {
-        navigate("/inicio");
+        navigate("/");
       }
     } catch (error) {
       console.error("Error al iniciar sesión:", error);

@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { format, addDays } from "date-fns";
 import Swal from "sweetalert2";
+import { jwtDecode } from "jwt-decode";
 
 type ModalProps = {
   id_servicio: number;
@@ -12,12 +13,20 @@ type Barbero = {
   nombre: string;
 };
 
+type JwtPayload = {
+  id_usuario: number;
+  rol: string;
+};
+
 const ModalAgendar = ({ id_servicio, setMostrarModal }: ModalProps) => {
   const [barberos, setBarberos] = useState<Barbero[]>([]);
   const [barbero, setBarbero] = useState("");
   const [fecha, setFecha] = useState(format(new Date(), "yyyy-MM-dd"));
   const [horarios, setHorarios] = useState<string[]>([]);
   const [hora, setHora] = useState("");
+
+  const token = localStorage.getItem("token");
+  const usuarioLogueado = token ? (jwtDecode(token) as JwtPayload) : null;
 
   useEffect(() => {
     fetch("http://localhost:3000/api/usuarios?rol=barbershop")
@@ -49,6 +58,14 @@ const ModalAgendar = ({ id_servicio, setMostrarModal }: ModalProps) => {
   }, [fecha, id_servicio, barbero]);
 
   const agendar = async () => {
+    if (!usuarioLogueado) {
+      return Swal.fire({
+        icon: "error",
+        title: "No estás logueado",
+        text: "Por favor inicia sesión para agendar una cita",
+      });
+    }
+
     if (!barbero || !hora || !id_servicio) {
       return Swal.fire({
         icon: "warning",
@@ -59,12 +76,17 @@ const ModalAgendar = ({ id_servicio, setMostrarModal }: ModalProps) => {
 
     const res = await fetch("http://localhost:3000/api/citas", {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
       body: JSON.stringify({
-        id_usuario: Number(barbero),
+        id_barbero: Number(barbero),
+        id_usuario: usuarioLogueado.id_usuario,
         servicio: Number(id_servicio),
         fecha,
         hora,
+        estado: "pendiente",
       }),
     });
 
@@ -78,10 +100,11 @@ const ModalAgendar = ({ id_servicio, setMostrarModal }: ModalProps) => {
       setHora("");
       setMostrarModal(false);
     } else {
+      const error = await res.json();
       Swal.fire({
         icon: "error",
         title: "Error",
-        text: "No se pudo registrar la cita",
+        text: error?.error || "No se pudo registrar la cita",
       });
     }
   };
@@ -102,7 +125,9 @@ const ModalAgendar = ({ id_servicio, setMostrarModal }: ModalProps) => {
 
         <div className="space-y-4">
           <div>
-            <label className="block text-sm font-bold mb-1 text-gray-900">Barbero</label>
+            <label className="block text-sm font-bold mb-1 text-gray-900">
+              Barbero
+            </label>
             <select
               className="w-full bg-gray-300 text-gray-900 border border-neutral-700 rounded-lg px-3 py-2"
               value={barbero}
@@ -118,7 +143,9 @@ const ModalAgendar = ({ id_servicio, setMostrarModal }: ModalProps) => {
           </div>
 
           <div>
-            <label className="block text-sm font-bold mb-1 text-gray-900">Fecha</label>
+            <label className="block text-sm font-bold mb-1 text-gray-900">
+              Fecha
+            </label>
             <input
               type="date"
               className="w-full bg-gray-300 text-gray-900 font-bold border border-neutral-700 rounded-lg px-3 py-2"
@@ -130,7 +157,9 @@ const ModalAgendar = ({ id_servicio, setMostrarModal }: ModalProps) => {
           </div>
 
           <div>
-            <label className="block text-sm font-bold mb-1 text-gray-900">Horario disponible</label>
+            <label className="block text-sm font-bold mb-1 text-gray-900">
+              Horario disponible
+            </label>
             <select
               className="w-full bg-gray-300 text-gray-900 border border-neutral-700 rounded-lg px-3 py-2"
               value={hora}
