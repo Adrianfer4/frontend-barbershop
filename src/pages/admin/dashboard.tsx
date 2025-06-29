@@ -3,6 +3,7 @@ import AdminLayout from "../../components/layout/AdminLayout";
 import Servicios from "../../components/admin/Servicios";
 import Clientes from "../../components/admin/Clientes";
 import Citas from "../../components/admin/Citas";
+import Ingresos from "../../components/admin/Ingresos";
 
 export default function Dashboard() {
   const [vista, setVista] = useState("dashboard");
@@ -17,6 +18,8 @@ export default function Dashboard() {
         return <Servicios />;
       case "citas":
         return <Citas />;
+        case "ingresos":
+        return <Ingresos />;
       default:
         return null;
     }

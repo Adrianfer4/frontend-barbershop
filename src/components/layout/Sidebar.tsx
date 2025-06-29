@@ -16,6 +16,7 @@ export function Sidebar({
     { id: "clientes", label: "Clientes" },
     { id: "servicios", label: "Servicios" },
     { id: "citas", label: "Citas" },
+    { id: "ingresos", label: "Ingresos" },
   ];
 
   return (

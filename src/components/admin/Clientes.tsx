@@ -113,7 +113,7 @@ export default function Clientes() {
   };
 
   return (
-    <div className="p-4 bg-white  rounded-xl ">
+    <div className="p-4 bg-gray-100 shadow rounded-xl">
       <h1 className="text-2xl font-bold mb-4 text-center">
         Gestión de Clientes
       </h1>

@@ -25,13 +25,17 @@ export default function Citas() {
 
       const token = localStorage.getItem("token"); // Asegúrate de que esté guardado al iniciar sesión
 
-      const res = await fetch(`http://localhost:3000/api/citas/admin?${params}`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
+      const res = await fetch(
+        `http://localhost:3000/api/citas/admin?${params}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
 
       const data = await res.json();
+      console.log("Citas actualizadas:", data);
       setCitas(data);
     } catch (error) {
       console.error("Error al cargar citas:", error);
@@ -165,21 +169,36 @@ export default function Citas() {
             ) : (
               citas.map((cita) => (
                 <tr key={cita.id_cita} className="text-center">
-                  <td className="border p-2 break-words">{cita.cliente_nombre}</td>
-                  <td className="border p-2 break-words">{cita.barbero_nombre}</td>
-                  <td className="border p-2 break-words">{cita.nombre_servicio}</td>
+                  <td className="border p-2 break-words">
+                    {cita.cliente_nombre}
+                  </td>
+                  <td className="border p-2 break-words">
+                    {cita.barbero_nombre}
+                  </td>
+                  <td className="border p-2 break-words">
+                    {cita.nombre_servicio}
+                  </td>
                   <td className="border p-2">{formatearFecha(cita.fecha)}</td>
                   <td className="border p-2">{cita.hora}</td>
-                  <td className={`border p-2 capitalize ${colorEstado(cita.estado)}`}>
+                  <td
+                    className={`border p-2 capitalize ${colorEstado(
+                      cita.estado
+                    )}`}
+                  >
                     {cita.estado}
                   </td>
                   <td className="border p-2 space-x-2">
                     <select
                       value={cita.estado}
                       onChange={(e) =>
-                        cambiarEstado(cita.id_cita, e.target.value as Cita["estado"])
+                        cambiarEstado(
+                          cita.id_cita,
+                          e.target.value as Cita["estado"]
+                        )
                       }
-                      className={`border rounded px-2 py-1 text-sm ${colorEstado(cita.estado)}`}
+                      className={`border rounded px-2 py-1 text-sm ${colorEstado(
+                        cita.estado
+                      )}`}
                     >
                       <option value="pendiente">Pendiente</option>
                       <option value="realizada">Realizada</option>

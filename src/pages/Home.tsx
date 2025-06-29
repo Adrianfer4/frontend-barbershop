@@ -5,6 +5,7 @@ import ServicioSection from "../components/ui/ServicioSection";
 import Footer from "../components/ui/Footer";
 import ContactSection from "../components/ui/Contacto";
 import WhatsAppFloating from "../components/ui/WhatsappFloating";
+import ScrollButton from "../components/ui/ScrollButton";
 
 const Home = () => {
   return (
@@ -20,6 +21,7 @@ const Home = () => {
       <ContactSection />
       <Footer />
       <WhatsAppFloating />
+      <ScrollButton />
     </main>
   );
 };

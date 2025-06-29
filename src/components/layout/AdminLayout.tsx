@@ -8,7 +8,7 @@ interface AdminLayoutProps {
 }
 
 export default function AdminLayout({ children, vistaActual, onSeleccionarVista }: AdminLayoutProps) {
-  const [sidebarAbierto, setSidebarAbierto] = useState(false); // 👈 estado nuevo
+  const [sidebarAbierto, setSidebarAbierto] = useState(false); // 
 
   return (
     <div className="flex min-h-screen bg-[#f3e8e0]">
