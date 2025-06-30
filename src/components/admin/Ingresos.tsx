@@ -1,5 +1,9 @@
 import { useEffect, useState } from "react";
 import Swal from "sweetalert2";
+import jsPDF from "jspdf";
+import html2canvas from "html2canvas";
+import GraficosIngresos from "../graficosIngresos/GraficosIngresos";
+import "../../styles/exportarPDF.css";
 
 type Ingreso = {
   id_ingreso: number;
@@ -32,6 +36,29 @@ export default function Ingresos() {
   const [selectedMonth, setSelectedMonth] = useState("");
   const [selectedDay, setSelectedDay] = useState("");
 
+  useEffect(() => {
+    fetchBarberos();
+    cargarTotalesAgrupados(filtro);
+  }, []);
+
+  useEffect(() => {
+    if (desde && hasta && new Date(hasta) < new Date(desde)) {
+      Swal.fire("Error", "'Hasta' no puede ser antes que 'Desde'", "error");
+      return;
+    }
+    fetchIngresos();
+  }, [desde, hasta, barberoSeleccionado]);
+
+  useEffect(() => {
+    if (
+      (filtro === "mes" && selectedMonth) ||
+      (filtro === "año" && selectedYear) ||
+      (filtro === "dia" && selectedDay)
+    ) {
+      cargarTotalesAgrupados(filtro, selectedYear, selectedMonth, selectedDay);
+    }
+  }, [selectedDay, selectedMonth, selectedYear, filtro]);
+
   const fetchBarberos = async () => {
     try {
       const res = await fetch("http://localhost:3000/api/usuarios/barberos");
@@ -51,9 +78,7 @@ export default function Ingresos() {
 
       const token = localStorage.getItem("token");
       const res = await fetch(`http://localhost:3000/api/ingresos?${params}`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
+        headers: { Authorization: `Bearer ${token}` },
       });
 
       const data: Ingreso[] = await res.json();
@@ -76,12 +101,11 @@ export default function Ingresos() {
       if (año) params.append("año", año);
       if (mes) params.append("mes", mes);
       if (dia) params.append("dia", dia);
+
       const token = localStorage.getItem("token");
       const res = await fetch(
         `http://localhost:3000/api/ingresos/agrupado?${params}`,
-        {
-          headers: { Authorization: `Bearer ${token}` },
-        }
+        { headers: { Authorization: `Bearer ${token}` } }
       );
 
       const data: IngresoAgrupado[] = await res.json();
@@ -95,19 +119,6 @@ export default function Ingresos() {
       );
     }
   };
-
-  useEffect(() => {
-    fetchBarberos();
-    cargarTotalesAgrupados(filtro);
-  }, []);
-
-  useEffect(() => {
-    if (desde && hasta && new Date(hasta) < new Date(desde)) {
-      Swal.fire("Error", "'Hasta' no puede ser antes que 'Desde'", "error");
-      return;
-    }
-    fetchIngresos();
-  }, [desde, hasta, barberoSeleccionado]);
 
   const formatearFecha = (fecha: string) => {
     if (!fecha || !fecha.includes("-")) return "Fecha no válida";
@@ -124,74 +135,75 @@ export default function Ingresos() {
     });
   };
 
-  const obtenerPeriodoLegible = (periodo: string | number): string => {
-    if (filtro === "mes") {
-      const meses = [
-        "Enero",
-        "Febrero",
-        "Marzo",
-        "Abril",
-        "Mayo",
-        "Junio",
-        "Julio",
-        "Agosto",
-        "Septiembre",
-        "Octubre",
-        "Noviembre",
-        "Diciembre",
-      ];
-      return meses[Number(periodo) - 1] || `Mes ${periodo}`;
-    }
-    if (filtro === "dia") return formatearFecha(String(periodo));
-    if (filtro === "año") return `Año ${periodo}`;
-    if (filtro === "semana") return `Semana ${periodo}`;
-    return String(periodo);
-  };
-
-  useEffect(() => {
-    if (
-      (filtro === "mes" && selectedMonth) ||
-      (filtro === "año" && selectedYear) ||
-      (filtro === "dia" && selectedDay)
-    ) {
-      cargarTotalesAgrupados(filtro, selectedYear, selectedMonth, selectedDay);
-    }
-  }, [selectedDay, selectedMonth, selectedYear, filtro]);
-
   const totalGeneral = ingresos.reduce((acc, i) => acc + Number(i.monto), 0);
 
-  const totalFiltrado = totales.reduce((acc, t) => acc + Number(t.total), 0);
+  const exportarPDFConGrafico = async () => {
+    const input = document.getElementById("reporte-pdf");
+    if (!input) {
+      return Swal.fire(
+        "Error",
+        "No se encontró el contenido para exportar",
+        "error"
+      );
+    }
+
+    // Agregamos clase que muestra el logo
+    input.classList.add("mostrar-logo-pdf");
+
+    const canvas = await html2canvas(input, {
+      scale: 2,
+      backgroundColor: "#ffffff",
+      useCORS: true,
+    });
+
+    // Removemos la clase después de capturar
+    input.classList.remove("mostrar-logo-pdf");
+
+    const imgData = canvas.toDataURL("image/png");
+    const pdf = new jsPDF("p", "mm", "a4");
+    const pageWidth = pdf.internal.pageSize.getWidth();
+    const imgProps = pdf.getImageProperties(imgData);
+    const imgHeight = (imgProps.height * pageWidth) / imgProps.width;
+
+    pdf.addImage(imgData, "PNG", 0, 0, pageWidth, imgHeight);
+    pdf.save("reporte-ingresos.pdf");
+  };
 
   return (
-    <div className="p-4 bg-gray-100 shadow rounded-xl">
-      <h1 className="text-2xl font-bold mb-4 text-center">Ingresos</h1>
+    <div className="ingresos-container">
+      <h1 className="ingresos-header">Ingresos</h1>
+      <div className="export-button-container">
+        <button onClick={exportarPDFConGrafico} className="pdf-button">
+          Exportar PDF
+        </button>
+      </div>
 
       {/* Filtros */}
-      <div className="flex flex-wrap gap-4 items-center mb-4">
-        <label className="flex items-center gap-2 text-sm">
+      <div className="filters-container">
+        <label className="filter-label">
           Desde:
           <input
             type="date"
             value={desde}
             onChange={(e) => setDesde(e.target.value)}
-            className="border rounded px-2 py-1"
+            className="filter-input"
           />
         </label>
-        <label className="flex items-center gap-2 text-sm">
+        <label className="filter-label">
           Hasta:
           <input
             type="date"
             value={hasta}
             onChange={(e) => setHasta(e.target.value)}
-            className="border rounded px-2 py-1"
+            className="filter-input"
           />
         </label>
-        <label className="flex items-center gap-2 text-sm">
+        <label className="filter-label">
           Barbero:
           <select
             value={barberoSeleccionado}
             onChange={(e) => setBarberoSeleccionado(e.target.value)}
-            className="border rounded px-2 py-1"
+            className="filter-select"
           >
             <option value="">Todos</option>
             {barberos.map((b) => (
@@ -201,25 +213,21 @@ export default function Ingresos() {
             ))}
           </select>
         </label>
-        <label className="flex items-center gap-2 text-sm">
+        <label className="filter-label">
           Agrupar por:
           <select
             value={filtro}
             onChange={(e) => {
-              const nuevoFiltro = e.target.value as
-                | "dia"
-                | "semana"
-                | "mes"
-                | "año";
-              setFiltro(nuevoFiltro);
+              const nuevo = e.target.value as "dia" | "semana" | "mes" | "año";
+              setFiltro(nuevo);
               cargarTotalesAgrupados(
-                nuevoFiltro,
+                nuevo,
                 selectedYear,
                 selectedMonth,
                 selectedDay
               );
             }}
-            className="border rounded px-2 py-1"
+            className="filter-select"
           >
             <option value="dia">Día</option>
             <option value="semana">Semana</option>
@@ -228,168 +236,134 @@ export default function Ingresos() {
           </select>
         </label>
 
-        {filtro === "año"&& (
-          
-            <label className="flex items-center gap-2 text-sm">
-              Año:
-              <select
-                value={selectedYear}
-                onChange={(e) => {
-                  const año = e.target.value;
-                  setSelectedYear(año);
-                  cargarTotalesAgrupados(filtro, año, selectedMonth);
-                }}
-                className="border rounded px-2 py-1"
-              >
-                <option value="">Todos</option>
-                {[2025, 2026, 2027, 2028, 2029, 2030].map((año) => (
-                  <option key={año} value={año}>
-                    {año}
-                  </option>
-                ))}
-              </select>
-            </label>
-)}
-            {filtro === "mes" && (
-              <label className="flex items-center gap-2 text-sm">
-                Mes:
-                <select
-                  value={selectedMonth}
-                  onChange={(e) => {
-                    const mes = e.target.value;
-                    setSelectedMonth(mes);
-                    cargarTotalesAgrupados(filtro, selectedYear, mes);
-                  }}
-                  className="border rounded px-2 py-1"
-                >
-                  <option value="">Todos</option>
-                  {Array.from({ length: 12 }, (_, i) => i + 1).map((m) => (
-                    <option key={m} value={m}>
-                      {new Date(0, m - 1).toLocaleString("es-EC", {
-                        month: "long",
-                      })}
-                    </option>
-                  ))}
-                </select>
-              </label>
-            )}
-            {filtro === "dia" && (
-              <label className="flex items-center gap-2 text-sm">
-                Día de la semana:
-                <select
-                  value={selectedDay}
-                  onChange={(e) => {
-                    const dia = e.target.value;
-                    setSelectedDay(dia);
-                    cargarTotalesAgrupados(
-                      "dia",
-                      selectedYear,
-                      selectedMonth,
-                      dia
-                    );
-                  }}
-                  className="border rounded px-2 py-1"
-                >
-                  <option value="">Todos</option>
-                  <option value="Monday">Lunes</option>
-                  <option value="Tuesday">Martes</option>
-                  <option value="Wednesday">Miércoles</option>
-                  <option value="Thursday">Jueves</option>
-                  <option value="Friday">Viernes</option>
-                  <option value="Saturday">Sábado</option>
-                  <option value="Sunday">Domingo</option>
-                </select>
-              </label>
-            )}        
+        {filtro === "año" && (
+          <label className="filter-label">
+            Año:
+            <select
+              value={selectedYear}
+              onChange={(e) => {
+                const año = e.target.value;
+                setSelectedYear(año);
+                cargarTotalesAgrupados(filtro, año, selectedMonth);
+              }}
+              className="filter-select"
+            >
+              <option value="">Todos</option>
+              {[2025, 2026, 2027].map((año) => (
+                <option key={año} value={año}>
+                  {año}
+                </option>
+              ))}
+            </select>
+          </label>
+        )}
+        {filtro === "mes" && (
+          <label className="filter-label">
+            Mes:
+            <select
+              value={selectedMonth}
+              onChange={(e) => {
+                const mes = e.target.value;
+                setSelectedMonth(mes);
+                cargarTotalesAgrupados(filtro, selectedYear, mes);
+              }}
+              className="filter-select"
+            >
+              <option value="">Todos</option>
+              {Array.from({ length: 12 }, (_, i) => i + 1).map((m) => (
+                <option key={m} value={m}>
+                  {new Date(0, m - 1).toLocaleString("es-EC", {
+                    month: "long",
+                  })}
+                </option>
+              ))}
+            </select>
+          </label>
+        )}
+        {filtro === "dia" && (
+          <label className="filter-label">
+            Día:
+            <select
+              value={selectedDay}
+              onChange={(e) => {
+                const dia = e.target.value;
+                setSelectedDay(dia);
+                cargarTotalesAgrupados(
+                  filtro,
+                  selectedYear,
+                  selectedMonth,
+                  dia
+                );
+              }}
+              className="filter-select"
+            >
+              <option value="">Todos</option>
+              <option value="Monday">Lunes</option>
+              <option value="Tuesday">Martes</option>
+              <option value="Wednesday">Miércoles</option>
+              <option value="Thursday">Jueves</option>
+              <option value="Friday">Viernes</option>
+              <option value="Saturday">Sábado</option>
+              <option value="Sunday">Domingo</option>
+            </select>
+          </label>
+        )}
       </div>
 
-      {/* Tabla de ingresos */}
-      <div className="overflow-x-auto max-w-full">
-        <table className="w-full table-auto border border-gray-300 text-sm mb-6">
-          <thead className="bg-gray-100">
-            <tr>
-              <th className="p-2 border">Barbero</th>
-              <th className="p-2 border">Servicio</th>
-              <th className="p-2 border">Monto</th>
-              <th className="p-2 border">Fecha</th>
-            </tr>
-          </thead>
-          <tbody>
-            {ingresos.length === 0 ? (
-              <tr>
-                <td colSpan={4} className="text-center p-4">
-                  No hay ingresos registrados.
-                </td>
-              </tr>
-            ) : (
-              ingresos.map((ingreso) => (
-                <tr key={ingreso.id_ingreso} className="text-center">
-                  <td className="border p-2">{ingreso.nombre_barbero}</td>
-                  <td className="border p-2">{ingreso.nombre_servicio}</td>
-                  <td className="border p-2 font-semibold text-green-700">
-                    ${Number(ingreso.monto).toFixed(2)}
-                  </td>
-                  <td className="border p-2">
-                    {formatearFecha(ingreso.fecha)}
-                  </td>
-                </tr>
-              ))
-            )}
-          </tbody>
-          {ingresos.length > 0 && (
-            <tfoot>
-              <tr>
-                <td colSpan={2} className="text-right font-bold p-2">
-                  Total general:
-                </td>
-                <td className="text-green-700 font-bold p-2">
-                  ${Number(totalGeneral).toFixed(2)}
-                </td>
-                <td></td>
-              </tr>
-            </tfoot>
-          )}
-        </table>
-      </div>
+      {/* Contenido exportable */}
+      <div id="reporte-pdf" className="reporte-pdf">
+        <div className="logo-pdf-only">
+          <div className="logo-container">
+            <img src="/logoBarbershop.png" alt="Logo" className="logo-img" />
+          </div>
+          <h1 className="ingresos-header">Ingresos</h1>
+        </div>
 
-      {/* Totales agrupados */}
-      {totales.length > 0 && (
-        <div>
-          <h2 className="text-xl font-bold mb-2">Totales por {filtro}</h2>
-          <table className="w-full table-auto border border-gray-300 text-sm">
-            <thead className="bg-gray-100">
+        <div className="exportable-content">
+          <table className="pdf-table">
+            <thead>
               <tr>
-                <th className="p-2 border">Barbero</th>
-                <th className="p-2 border">Periodo</th>
-                <th className="p-2 border">Total</th>
+                <th>Barbero</th>
+                <th>Servicio</th>
+                <th>Monto</th>
+                <th>Fecha</th>
               </tr>
             </thead>
             <tbody>
-              {totales.map((t, i) => (
-                <tr key={i} className="text-center">
-                  <td className="border p-2">{t.nombre}</td>
-                  <td className="border p-2">
-                    {obtenerPeriodoLegible(t.periodo)}
-                  </td>
-                  <td className="border p-2 font-semibold text-blue-700">
-                    ${Number(t.total).toFixed(2)}
-                  </td>
+              {ingresos.length === 0 ? (
+                <tr>
+                  <td colSpan={4}>No hay ingresos registrados.</td>
                 </tr>
-              ))}
+              ) : (
+                ingresos.map((i) => (
+                  <tr key={i.id_ingreso}>
+                    <td>{i.nombre_barbero}</td>
+                    <td>{i.nombre_servicio}</td>
+                    <td>${Number(i.monto).toFixed(2)}</td>
+                    <td>{formatearFecha(i.fecha)}</td>
+                  </tr>
+                ))
+              )}
             </tbody>
-            <tfoot>
-              <tr className="font-bold">
-                <td className="text-right p-2" colSpan={2}>
-                  Total general:
-                </td>
-                <td className="text-blue-700 p-2">
-                  ${totalFiltrado.toFixed(2)}
-                </td>
-              </tr>
-            </tfoot>
+            {ingresos.length > 0 && (
+              <tfoot>
+                <tr>
+                  <td colSpan={2}>Total general:</td>
+                  <td>${totalGeneral.toFixed(2)}</td>
+                  <td></td>
+                </tr>
+              </tfoot>
+            )}
           </table>
         </div>
-      )}
+
+        {totales.length > 0 && (
+          <>
+            <h2 className="titulo">Totales por {filtro}</h2>
+            <GraficosIngresos totales={totales} filtro={filtro} />
+          </>
+        )}
+      </div>
     </div>
   );
 }

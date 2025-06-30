@@ -34,12 +34,7 @@ export function Sidebar({
           visible ? "translate-x-0" : "-translate-x-full"
         } md:translate-x-0 w-64 min-h-screen shadow-lg border-r text-white bg-black overflow-hidden`}
       >
-        <img
-          src="/sidebar.jpg"
-          alt="Fondo"
-          className="absolute inset-0 h-full w-full z-0"
-        />
-        <div className="absolute inset-0 bg-black/40 z-10" />
+        <div className="absolute inset-0 bg-yellow-700 z-10" />
         <div className="relative z-20 p-6 space-y-4">
           <div className="flex justify-between items-center">
             <h1 className="text-xl font-bold">Admin Panel</h1>

@@ -1,0 +1,115 @@
+.logo-pdf-only {
+    display: none;
+}
+
+.mostrar-logo-pdf .logo-pdf-only {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 1rem;
+  position: relative;
+}
+
+.mostrar-logo-pdf .logo-img {
+  max-height: 100px;
+  object-fit: contain;
+  margin-right: auto; 
+}
+
+.mostrar-logo-pdf .ingresos-header {
+  font-size: 1.8rem;
+  font-weight: bold;
+  text-align: center;
+  margin: 0 auto;
+  flex-grow: 1;
+}
+
+.pdf-button {
+  background-color: #2563eb;
+  color: white;
+  padding: 8px 16px;
+  border-radius: 4px;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.3s;
+  margin-bottom: 16px;
+  float: right;
+}
+
+.pdf-button:hover {
+  background-color: #1d4ed8;
+}
+
+.ingresos-header {
+  font-size: 24px;
+  font-weight: bold;
+  margin-bottom: 16px;
+  text-align: center;
+}
+
+.filters-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.filter-label {
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.filter-input {
+  border: 1px solid #d1d5db;
+  border-radius: 4px;
+  padding: 4px 8px;
+}
+
+.filter-select {
+  border: 1px solid #d1d5db;
+  border-radius: 4px;
+  padding: 4px 8px;
+  background-color: white;
+}
+
+.reporte-pdf {
+  background-color: white;
+  padding: 16px;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+
+.pdf-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 16px;
+}
+
+.pdf-table th, .pdf-table td {
+  border: 1px solid #e5e7eb;
+  padding: 8px;
+  text-align: left;
+}
+
+.pdf-table th {
+  background-color: #f9fafb;
+  font-weight: bold;
+}
+
+.pdf-table tfoot td {
+  font-weight: bold;
+}
+
+.titulo {
+  font-size: 20px;
+  font-weight: 600;
+  margin-top: 16px;
+  margin-bottom: 8px;
+}
+
+.exportable-content {
+  margin-top: 16px;
+}
