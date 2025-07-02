@@ -100,19 +100,19 @@ export default function GraficosIngresos({ totales, filtro }: Props) {
       {/* Fila con 2 gráficos */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div className="bg-white p-4 rounded shadow">
-          <h3 className="font-bold text-center mb-2">Gráfico de Barras</h3>
+          <h3 className="font-bold text-center mb-2">Ingresos totales por periodo</h3>
           <Bar data={data} options={{ responsive: true }} />
         </div>
 
         <div className="bg-white p-4 rounded shadow">
-          <h3 className="font-bold text-center mb-2">Gráfico de Líneas</h3>
+          <h3 className="font-bold text-center mb-2">Evolución de ingresos en el tiempo</h3>
           <Line data={data} options={{ responsive: true }} />
         </div>
       </div>
 
       {/* Fila con gráfico de pastel */}
       <div className="bg-white p-4 rounded shadow">
-        <h3 className="font-bold text-center mb-2">Gráfico de Pastel</h3>
+        <h3 className="font-bold text-center mb-2">Distribución de ingresos por barbero</h3>
         <div className="max-w-[300px] mx-auto">
           <Pie
             data={{

@@ -1,27 +1,38 @@
 .logo-pdf-only {
-    display: none;
+  display: none;
 }
 
 .mostrar-logo-pdf .logo-pdf-only {
   display: flex;
   align-items: center;
   justify-content: center;
-  margin-bottom: 1rem;
   position: relative;
+  height: 60px;
+  margin-bottom: 1rem;
 }
 
-.mostrar-logo-pdf .logo-img {
+.logo-pdf-only .logo-img {
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
   max-height: 100px;
   object-fit: contain;
-  margin-right: auto; 
 }
 
-.mostrar-logo-pdf .ingresos-header {
+.logo-pdf-only .ingresos-header {
   font-size: 1.8rem;
   font-weight: bold;
+  margin: 0;
   text-align: center;
-  margin: 0 auto;
-  flex-grow: 1;
+  width: 100%;
+}
+
+.ingresos-container {
+  padding: 16px;
+  background-color: #f3f4f6;
+  border-radius: 12px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
 .pdf-button {
@@ -34,6 +45,9 @@
   transition: background-color 0.3s;
   margin-bottom: 16px;
   float: right;
+  position: fixed;
+  top: 35px;
+  right: 60px;
 }
 
 .pdf-button:hover {
@@ -79,7 +93,7 @@
   background-color: white;
   padding: 16px;
   border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
 }
 
 .pdf-table {
@@ -88,7 +102,8 @@
   margin-bottom: 16px;
 }
 
-.pdf-table th, .pdf-table td {
+.pdf-table th,
+.pdf-table td {
   border: 1px solid #e5e7eb;
   padding: 8px;
   text-align: left;

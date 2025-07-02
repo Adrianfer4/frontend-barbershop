@@ -196,7 +196,7 @@ export default function Servicios() {
       <div className="p-6">
         <h1 className="text-2xl font-bold mb-4">Gestión de Servicios</h1>
 
-        <table className="w-full table-auto border border-gray-300">
+        <table className="w-full bg-white table-auto border border-gray-300">
           <thead className="bg-gray-100">
             <tr>
               <th className="p-2 border">Nombre</th>

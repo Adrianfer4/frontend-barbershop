@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { format, addDays } from "date-fns";
 import Swal from "sweetalert2";
 import { jwtDecode } from "jwt-decode";
+import { useNavigate } from "react-router-dom";
 
 type ModalProps = {
   id_servicio: number;
@@ -27,6 +28,8 @@ const ModalAgendar = ({ id_servicio, setMostrarModal }: ModalProps) => {
 
   const token = localStorage.getItem("token");
   const usuarioLogueado = token ? (jwtDecode(token) as JwtPayload) : null;
+
+  const navigate = useNavigate();
 
   useEffect(() => {
     fetch("http://localhost:3000/api/usuarios?rol=barbershop")
@@ -63,6 +66,8 @@ const ModalAgendar = ({ id_servicio, setMostrarModal }: ModalProps) => {
         icon: "error",
         title: "No estás logueado",
         text: "Por favor inicia sesión para agendar una cita",
+      }).then(() => {
+        navigate("/login");
       });
     }
 

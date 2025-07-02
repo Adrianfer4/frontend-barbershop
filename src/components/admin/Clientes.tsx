@@ -16,6 +16,7 @@ export default function Clientes() {
   const [showModal, setShowModal] = useState(false);
   const [showEditModal, setShowEditModal] = useState(false);
   const [clienteEditado, setClienteEditado] = useState<Cliente | null>(null);
+  const [busqueda, setBusqueda] = useState("");
 
   const [formData, setFormData] = useState({
     nombre: "",
@@ -35,6 +36,30 @@ export default function Clientes() {
     fetchClientes();
   }, []);
 
+  const clientesFiltrados = clientes.filter((cliente) => {
+    const termino = busqueda.toLowerCase();
+    return (
+      cliente.nombre.toLowerCase().includes(termino) ||
+      cliente.apellido.toLowerCase().includes(termino) ||
+      cliente.telefono.toLowerCase().includes(termino) ||
+      cliente.email.toLowerCase().includes(termino)
+    );
+  });
+
+  const resaltarCoincidencia = (texto: string) => {
+    if (!busqueda) return texto;
+    const partes = texto.split(new RegExp(`(${busqueda})`, "gi"));
+    return partes.map((p, i) =>
+      p.toLowerCase() === busqueda.toLowerCase() ? (
+        <mark key={i} className="bg-gray-200 rounded px-1">
+          {p}
+        </mark>
+      ) : (
+        p
+      )
+    );
+  };
+
   const handleCrear = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
@@ -45,32 +70,15 @@ export default function Clientes() {
       });
 
       const data = await res.json();
-
-      if (!res.ok) {
-        throw new Error(data.message || "No se pudo crear el cliente");
-      }
+      if (!res.ok) throw new Error(data.message);
 
       setShowModal(false);
-      setFormData({
-        nombre: "",
-        apellido: "",
-        telefono: "",
-        email: "",
-        rol: "cliente",
-      });
+      setFormData({ nombre: "", apellido: "", telefono: "", email: "", rol: "cliente" });
       fetchClientes();
 
-      Swal.fire(
-        "Éxito",
-        data.message || "Cliente creado exitosamente.",
-        "success"
-      );
+      Swal.fire("Éxito", data.message || "Cliente creado exitosamente.", "success");
     } catch {
-      Swal.fire({
-        icon: "error",
-        title: "Error",
-        text: "Hubo un problema al crear el cliente",
-      });
+      Swal.fire("Error", "Hubo un problema al crear el cliente", "error");
     }
   };
 
@@ -78,14 +86,11 @@ export default function Clientes() {
     e.preventDefault();
     if (!clienteEditado) return;
     try {
-      await fetch(
-        `http://localhost:3000/api/usuarios/${clienteEditado.id_usuario}`,
-        {
-          method: "PUT",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(clienteEditado),
-        }
-      );
+      await fetch(`http://localhost:3000/api/usuarios/${clienteEditado.id_usuario}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(clienteEditado),
+      });
       setShowEditModal(false);
       setClienteEditado(null);
       fetchClientes();
@@ -114,12 +119,18 @@ export default function Clientes() {
 
   return (
     <div className="p-4 bg-gray-100 shadow rounded-xl">
-      <h1 className="text-2xl font-bold mb-4 text-center">
-        Gestión de Clientes
-      </h1>
+      <h1 className="text-2xl font-bold mb-4 text-center">Gestión de Clientes</h1>
 
-      <div className="overflow-x-auto">
-        <table className="w-full table-auto border border-gray-300 text-sm">
+      <input
+        type="text"
+        placeholder="Buscar cliente..."
+        value={busqueda}
+        onChange={(e) => setBusqueda(e.target.value)}
+        className="border px-3 py-1 rounded mb-4 "
+      />
+
+      <div className="overflow-x-auto bg-white">
+        <table className="w-full bg-white table-auto border border-gray-300 text-sm">
           <thead className="bg-gray-100">
             <tr>
               <th className="border p-2">Nombre</th>
@@ -131,19 +142,19 @@ export default function Clientes() {
             </tr>
           </thead>
           <tbody>
-            {clientes.length === 0 ? (
+            {clientesFiltrados.length === 0 ? (
               <tr>
                 <td colSpan={6} className="text-center p-4">
-                  No hay clientes disponibles.
+                  No se encontraron resultados.
                 </td>
               </tr>
             ) : (
-              clientes.map((cliente) => (
+              clientesFiltrados.map((cliente) => (
                 <tr key={cliente.id_usuario} className="text-center">
-                  <td className="border p-2">{cliente.nombre}</td>
-                  <td className="border p-2">{cliente.apellido}</td>
-                  <td className="border p-2">{cliente.telefono}</td>
-                  <td className="border p-2">{cliente.email}</td>
+                  <td className="border p-2">{resaltarCoincidencia(cliente.nombre)}</td>
+                  <td className="border p-2">{resaltarCoincidencia(cliente.apellido)}</td>
+                  <td className="border p-2">{resaltarCoincidencia(cliente.telefono)}</td>
+                  <td className="border p-2">{resaltarCoincidencia(cliente.email)}</td>
                   <td className="border p-2 capitalize">{cliente.rol}</td>
                   <td className="border p-2 space-x-2">
                     <button
@@ -169,7 +180,7 @@ export default function Clientes() {
         </table>
       </div>
 
-      {/* Modal Crear */}
+      {/* Botón Crear */}
       <button
         onClick={() => setShowModal(true)}
         className="mt-4 bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
@@ -177,23 +188,19 @@ export default function Clientes() {
         + Crear Cliente
       </button>
 
+      {/* Modal Crear */}
       {showModal && (
         <ModalCliente
           show={showModal}
           onClose={() => setShowModal(false)}
           title="Nuevo Cliente"
         >
-          <form
-            onSubmit={handleCrear}
-            className="space-y-4  p-6 rounded-lg shadow-lg"
-          >
+          <form onSubmit={handleCrear} className="space-y-4 p-6 rounded-lg shadow-lg">
             <input
               type="text"
               placeholder="Nombre"
               value={formData.nombre}
-              onChange={(e) =>
-                setFormData({ ...formData, nombre: e.target.value })
-              }
+              onChange={(e) => setFormData({ ...formData, nombre: e.target.value })}
               className="w-full border p-2 rounded"
               required
             />
@@ -201,9 +208,7 @@ export default function Clientes() {
               type="text"
               placeholder="Apellido"
               value={formData.apellido}
-              onChange={(e) =>
-                setFormData({ ...formData, apellido: e.target.value })
-              }
+              onChange={(e) => setFormData({ ...formData, apellido: e.target.value })}
               className="w-full border p-2 rounded"
               required
             />
@@ -213,9 +218,7 @@ export default function Clientes() {
               pattern="\d{10}"
               title="Debe tener 10 números"
               value={formData.telefono}
-              onChange={(e) =>
-                setFormData({ ...formData, telefono: e.target.value })
-              }
+              onChange={(e) => setFormData({ ...formData, telefono: e.target.value })}
               className="w-full border p-2 rounded"
               required
             />
@@ -223,17 +226,13 @@ export default function Clientes() {
               type="email"
               placeholder="Correo"
               value={formData.email}
-              onChange={(e) =>
-                setFormData({ ...formData, email: e.target.value })
-              }
+              onChange={(e) => setFormData({ ...formData, email: e.target.value })}
               className="w-full border p-2 rounded"
               required
             />
             <select
               value={formData.rol}
-              onChange={(e) =>
-                setFormData({ ...formData, rol: e.target.value })
-              }
+              onChange={(e) => setFormData({ ...formData, rol: e.target.value })}
               className="w-full border p-2 rounded"
             >
               <option value="cliente">Cliente</option>
@@ -259,71 +258,45 @@ export default function Clientes() {
         </ModalCliente>
       )}
 
+      {/* Modal Editar */}
       {showEditModal && clienteEditado && (
         <ModalCliente
           show={true}
           onClose={() => setShowEditModal(false)}
           title="Editar Cliente"
         >
-          <form
-            onSubmit={handleEditar}
-            className="space-y-4  p-6 rounded-lg shadow-lg"
-          >
+          <form onSubmit={handleEditar} className="space-y-4 p-6 rounded-lg shadow-lg">
             <input
               type="text"
               value={clienteEditado.nombre}
-              onChange={(e) =>
-                setClienteEditado({
-                  ...clienteEditado,
-                  nombre: e.target.value,
-                })
-              }
+              onChange={(e) => setClienteEditado({ ...clienteEditado, nombre: e.target.value })}
               className="w-full border p-2 rounded"
               required
             />
             <input
               type="text"
-              placeholder="(Apellido)"
               value={clienteEditado.apellido}
-              onChange={(e) =>
-                setClienteEditado({
-                  ...clienteEditado,
-                  apellido: e.target.value,
-                })
-              }
+              onChange={(e) => setClienteEditado({ ...clienteEditado, apellido: e.target.value })}
               className="w-full border p-2 rounded"
               required
             />
             <input
               type="text"
-              placeholder="(telefono)"
               value={clienteEditado.telefono}
-              onChange={(e) =>
-                setClienteEditado({
-                  ...clienteEditado,
-                  telefono: e.target.value,
-                })
-              }
+              onChange={(e) => setClienteEditado({ ...clienteEditado, telefono: e.target.value })}
               className="w-full border p-2 rounded"
               required
             />
             <input
               type="email"
               value={clienteEditado.email}
-              onChange={(e) =>
-                setClienteEditado({
-                  ...clienteEditado,
-                  email: e.target.value,
-                })
-              }
+              onChange={(e) => setClienteEditado({ ...clienteEditado, email: e.target.value })}
               className="w-full border p-2 rounded"
               required
             />
             <select
               value={clienteEditado.rol}
-              onChange={(e) =>
-                setClienteEditado({ ...clienteEditado, rol: e.target.value })
-              }
+              onChange={(e) => setClienteEditado({ ...clienteEditado, rol: e.target.value })}
               className="w-full border p-2 rounded"
             >
               <option value="cliente">Cliente</option>

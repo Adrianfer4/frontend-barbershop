@@ -171,8 +171,8 @@ export default function Ingresos() {
 
   return (
     <div className="ingresos-container">
-      <h1 className="ingresos-header">Ingresos</h1>
       <div className="export-button-container">
+        <h1 className="ingresos-header">Ingresos</h1>
         <button onClick={exportarPDFConGrafico} className="pdf-button">
           Exportar PDF
         </button>
@@ -312,10 +312,8 @@ export default function Ingresos() {
 
       {/* Contenido exportable */}
       <div id="reporte-pdf" className="reporte-pdf">
-        <div className="logo-pdf-only">
-          <div className="logo-container">
-            <img src="/logoBarbershop.png" alt="Logo" className="logo-img" />
-          </div>
+        <div className="logo-header-wrapper logo-pdf-only">
+          <img src="/logoBarbershop.png" alt="Logo" className="logo-img" />
           <h1 className="ingresos-header">Ingresos</h1>
         </div>
 

@@ -146,7 +146,7 @@ export default function Citas() {
       </div>
 
       {/* Tabla */}
-      <div className="overflow-x-auto max-w-full">
+      <div className="overflow-x-auto max-w-full bg-white">
         <table className="w-full table-auto border border-gray-300 text-sm">
           <thead className="bg-gray-100">
             <tr>
