@@ -72,14 +72,6 @@ export default function LoginForm() {
       localStorage.setItem("token", data.token);
       localStorage.setItem("usuario", JSON.stringify(data.usuario));
 
-      Swal.fire({
-        icon: "success",
-        title: "Bienvenido",
-        text: `Hola ${data.usuario.nombre || data.usuario.email}!`,
-        timer: 2000,
-        showConfirmButton: false,
-      });
-
       // Redirigir según el rol
       if (data.usuario.rol === "admin") {
         navigate("/admin/dashboard");
