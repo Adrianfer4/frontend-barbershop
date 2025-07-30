@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import Swal from "sweetalert2";
 import { FaUserCircle } from "react-icons/fa";
+import LoaderBarbershop from "../utils/LoaderBarberia";
 
 type Usuario = {
   id_usuario: number;
@@ -40,14 +41,17 @@ const Perfil = () => {
     })
       .then((res) => res.json())
       .then((data) => {
-        setUsuario(data);
-        setEditForm({
-          nombre: data.nombre,
-          apellido: data.apellido,
-          telefono: data.telefono,
-          email: data.email,
-        });
+        setTimeout(() => {
+          setUsuario(data);
+          setEditForm({
+            nombre: data.nombre,
+            apellido: data.apellido,
+            telefono: data.telefono,
+            email: data.email,
+          });
+        }, 1000);
       })
+
       .catch(() => Swal.fire("Error", "No se pudo cargar el perfil", "error"));
   }, []);
 
@@ -142,48 +146,22 @@ const Perfil = () => {
     }
   };
 
-  if (!usuario)
-    return (
-      <div className="min-h-screen flex items-center justify-center text-black">
-        <div className="flex flex-col items-center gap-2">
-          <svg
-            className="w-10 h-10 animate-spin text-amber-600"
-            fill="none"
-            viewBox="0 0 24 24"
-          >
-            <circle
-              className="opacity-25"
-              cx="12"
-              cy="12"
-              r="10"
-              stroke="currentColor"
-              strokeWidth="4"
-            ></circle>
-            <path
-              className="opacity-75"
-              fill="currentColor"
-              d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"
-            ></path>
-          </svg>
-          <p className="text-sm text-gray-600">Cargando perfil...</p>
-        </div>
-      </div>
-    );
+  if (!usuario) return <LoaderBarbershop mensaje="Cargando perfil..." />
 
   return (
     <div className="min-h-screen flex flex-col md:flex-row bg-gradient-to-br from-yellow-50 to-amber-100 text-gray-800">
       {/* Sidebar */}
       <aside className="w-full md:w-1/3 p-6 bg-amber-200 shadow-md flex flex-col items-center gap-4">
         <div className="relative w-32 h-32 rounded-full overflow-hidden border-4 border-amber-500 shadow-lg">
-            {usuario.foto_perfil ? (
-              <img
-                src={`http://localhost:3000/uploads/usuarios/${usuario.foto_perfil}`}
-                alt="Foto de perfil"
-                className="w-full h-full object-cover"
-              />
-            ) : (
-              <FaUserCircle className="text-amber-500  w-30 h-30 shadow-lg" />
-            )}
+          {usuario.foto_perfil ? (
+            <img
+              src={`http://localhost:3000/uploads/usuarios/${usuario.foto_perfil}`}
+              alt="Foto de perfil"
+              className="w-full h-full object-cover"
+            />
+          ) : (
+            <FaUserCircle className="text-amber-500  w-30 h-30 shadow-lg" />
+          )}
 
           <label className="absolute bottom-0 w-full text-center bg-black/60 text-white text-xs cursor-pointer py-1 hover:bg-amber-600 transition">
             Cambiar
@@ -256,7 +234,7 @@ const Perfil = () => {
               required
             />
             <div className="md:col-span-2">
-              <button className="mt-2 px-4 py-2 bg-amber-600 text-white rounded hover:bg-amber-700">
+              <button className="mt-2 px-4 py-2 bg-amber-600 text-white rounded hover:bg-amber-700 transition">
                 Guardar Cambios
               </button>
             </div>
@@ -305,7 +283,7 @@ const Perfil = () => {
               required
             />
             <div className="md:col-span-2">
-              <button className="mt-2 px-4 py-2 bg-amber-600 text-white rounded hover:bg-amber-700">
+              <button className="mt-2 px-4 py-2 bg-amber-600 text-white rounded hover:bg-amber-700 transition">
                 Cambiar Contraseña
               </button>
             </div>

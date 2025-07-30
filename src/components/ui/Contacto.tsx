@@ -5,6 +5,7 @@ import { FaEnvelope, FaWhatsapp, FaFacebook } from "react-icons/fa";
 const ContactSection = () => {
   return (
     <section
+      id="contacto"
       className="bg-black/50 py-12 px-6 md:px-20"
       style={{ fontFamily: "Reey-Regular, cursive" }}
     >
@@ -12,7 +13,6 @@ const ContactSection = () => {
         {/* Texto + Opciones */}
         <div>
           <motion.h2
-            id="contacto"
             className="text-3xl md:text-4xl font-bold text-white mb-4 font-[reey]"
             style={{ fontFamily: "Reey-Regular, cursive" }}
             initial={{ opacity: 0, y: -20 }}

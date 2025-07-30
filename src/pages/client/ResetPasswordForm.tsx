@@ -101,7 +101,7 @@ export default function ResetPasswordForm() {
             <button
               type="button"
               onClick={() => setMostrarPass((prev) => !prev)}
-              className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700"
+              className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700 transition"
             >
               {mostrarPass ? <EyeOff size={20} /> : <Eye size={20} />}
             </button>
@@ -125,7 +125,7 @@ export default function ResetPasswordForm() {
             <button
               type="button"
               onClick={() => setMostrarConfirmar((prev) => !prev)}
-              className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700"
+              className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700 transition"
             >
               {mostrarConfirmar ? <EyeOff size={20} /> : <Eye size={20} />}
             </button>

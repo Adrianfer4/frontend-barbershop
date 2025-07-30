@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import ModalCliente from "../crud/Modal";
+import ModalCliente from "../modalesCrud/Modal";
 import Swal from "sweetalert2";
 
 interface Cliente {
@@ -28,6 +28,17 @@ export default function Clientes() {
     email: "",
     rol: "cliente",
   });
+
+  {
+    /*Paginacion */
+  }
+  const [paginaActual, setPaginaActual] = useState(1);
+  const elementosPorPagina = 10;
+  const indiceInicio = (paginaActual - 1) * elementosPorPagina;
+  const indiceFin = indiceInicio + elementosPorPagina;
+  const clientesPaginados = clientesFiltrados.slice(indiceInicio, indiceFin);
+
+  const totalPaginas = Math.ceil(clientesFiltrados.length / elementosPorPagina);
 
   const fetchClientes = async () => {
     const res = await fetch("http://localhost:3000/api/usuarios");
@@ -59,7 +70,8 @@ export default function Clientes() {
 
   useEffect(() => {
     buscarClientes();
-  }, [filtroRol]);
+    setPaginaActual(1);
+  }, [busqueda, filtroRol]);
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === "Enter") {
@@ -133,7 +145,10 @@ export default function Clientes() {
 
   return (
     <div className="p-4 bg-gray-100 shadow rounded-xl">
-      <h1 className="text-2xl font-bold mb-4 text-center">
+      <h1
+        className="text-3xl uppercase text-amber-600 text-center font-semi-bold mb-6"
+        style={{ fontFamily: "'Russo One', sans-serif" }}
+      >
         Gestión de Clientes
       </h1>
 
@@ -155,11 +170,11 @@ export default function Clientes() {
           <option value="todos">Todos</option>
           <option value="cliente">Cliente</option>
           <option value="admin">Admin</option>
-          <option value="barbershop">Barbershop</option>
+          <option value="barbershop">Barbero</option>
         </select>
         <button
           onClick={buscarClientes}
-          className="bg-blue-600 text-white px-4 py-1 rounded hover:bg-blue-700"
+          className="bg-yellow-500 text-white px-4 py-1 rounded hover:bg-yellow-600 transition"
         >
           Buscar
         </button>
@@ -186,7 +201,7 @@ export default function Clientes() {
                 </td>
               </tr>
             ) : (
-              clientesFiltrados.map((cliente) => (
+              clientesPaginados.map((cliente) => (
                 <tr key={cliente.id_usuario} className="text-center">
                   <td className="border p-2">{cliente.nombre}</td>
                   <td className="border p-2">{cliente.apellido}</td>
@@ -195,7 +210,7 @@ export default function Clientes() {
                   <td className="border p-2 capitalize">{cliente.rol}</td>
                   <td className="border p-2 space-x-2">
                     <button
-                      className="text-blue-600 hover:underline"
+                      className="text-blue-600 hover:underline transition"
                       onClick={() => {
                         setClienteEditado(cliente);
                         setShowEditModal(true);
@@ -204,7 +219,7 @@ export default function Clientes() {
                       Editar
                     </button>
                     <button
-                      className="text-red-600 hover:underline"
+                      className="text-red-600 hover:underline transition"
                       onClick={() => handleEliminar(cliente.id_usuario)}
                     >
                       Eliminar
@@ -217,10 +232,45 @@ export default function Clientes() {
         </table>
       </div>
 
+      {/* Paginacion */}
+      <div className="flex justify-center items-center mt-4 gap-2">
+        <button
+          onClick={() => setPaginaActual((prev) => Math.max(prev - 1, 1))}
+          disabled={paginaActual === 1}
+          className="px-3 py-1 bg-gray-300 rounded hover:bg-gray-400 disabled:opacity-50 transition"
+        >
+          Anterior
+        </button>
+
+        {Array.from({ length: totalPaginas }, (_, i) => (
+          <button
+            key={i}
+            onClick={() => setPaginaActual(i + 1)}
+            className={`px-3 py-1 rounded ${
+              paginaActual === i + 1
+                ? "bg-amber-600 text-white"
+                : "bg-gray-200 hover:bg-gray-300 transition"
+            }`}
+          >
+            {i + 1}
+          </button>
+        ))}
+
+        <button
+          onClick={() =>
+            setPaginaActual((prev) => Math.min(prev + 1, totalPaginas))
+          }
+          disabled={paginaActual === totalPaginas}
+          className="px-3 py-1 bg-gray-300 rounded hover:bg-gray-400 disabled:opacity-50 transition"
+        >
+          Siguiente
+        </button>
+      </div>
+
       {/* Botón Crear Cliente */}
       <button
         onClick={() => setShowModal(true)}
-        className="mt-4 bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
+        className="fixed bottom-8 right-6 bg-amber-600 text-white px-4 py-2 rounded-full shadow-lg hover:bg-amber-700 z-50 transition"
       >
         + Crear Cliente
       </button>
@@ -234,72 +284,76 @@ export default function Clientes() {
         >
           <form
             onSubmit={handleCrear}
-            className="space-y-4 p-6 rounded-lg shadow-lg bg-white/50"
+            className="space-y-4 "
           >
+            <label className="block text-sm font-bold mb-1 text-gray-900">Nombre</label>
             <input
               type="text"
-              placeholder="Nombre"
+              placeholder="Ingrese su Nombre"
               value={formData.nombre}
               onChange={(e) =>
                 setFormData({ ...formData, nombre: e.target.value })
               }
-              className="w-full border p-2 rounded"
+              className="w-full p-2 rounded-lg bg-gray-300 focus:outline-none focus:ring-2 focus:ring-yellow-500"
               required
             />
+            <label className="block text-sm font-bold mb-1 text-gray-900">Apellido</label>
             <input
               type="text"
-              placeholder="Apellido"
+              placeholder="Ingrese su Apellido"
               value={formData.apellido}
               onChange={(e) =>
                 setFormData({ ...formData, apellido: e.target.value })
               }
-              className="w-full border p-2 rounded"
+              className="w-full p-2 rounded-lg bg-gray-300 focus:outline-none focus:ring-2 focus:ring-yellow-500"
               required
             />
+            <label className="block text-sm font-bold mb-1 text-gray-900">Telefono</label>
             <input
               type="tel"
-              placeholder="Teléfono"
+              placeholder="Ingrese su Teléfono"
               pattern="\d{10}"
               title="Debe tener 10 dígitos"
               value={formData.telefono}
               onChange={(e) =>
                 setFormData({ ...formData, telefono: e.target.value })
               }
-              className="w-full border p-2 rounded"
+              className="w-full p-2 rounded-lg bg-gray-300 focus:outline-none focus:ring-2 focus:ring-yellow-500"
               required
             />
+            <label className="block text-sm font-bold mb-1 text-gray-900">Correo</label>
             <input
               type="email"
-              placeholder="Correo"
+              placeholder="Ingrese su Correo"
               value={formData.email}
               onChange={(e) =>
                 setFormData({ ...formData, email: e.target.value })
               }
-              className="w-full border p-2 rounded"
+              className="w-full p-2 rounded-lg bg-gray-300 focus:outline-none focus:ring-2 focus:ring-yellow-500"
               required
             />
+            <label className="block text-sm font-bold mb-1 text-gray-900">Tipo de Usuario</label>
             <select
               value={formData.rol}
               onChange={(e) =>
                 setFormData({ ...formData, rol: e.target.value })
-              }
-              className="w-full border p-2 rounded"
+              }className="w-full p-2 rounded-lg bg-gray-300 focus:outline-none focus:ring-2 focus:ring-yellow-500"
             >
               <option value="cliente">Cliente</option>
               <option value="admin">Admin</option>
-              <option value="barbershop">Barbershop</option>
+              <option value="barbershop">Barbero</option>
             </select>
             <div className="flex justify-end gap-2">
               <button
                 type="button"
                 onClick={() => setShowModal(false)}
-                className="bg-gray-400 text-white px-4 py-2 rounded"
+                className="bg-gray-400 text-white px-4 py-2 rounded-lg hover:bg-gray-500 transition"
               >
                 Cancelar
               </button>
               <button
                 type="submit"
-                className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
+                className="bg-gradient-to-r from-yellow-500 to-amber-600 hover:opacity-80 text-white font-bold px-4 py-2 rounded-lg transition"
               >
                 Guardar
               </button>
@@ -317,17 +371,19 @@ export default function Clientes() {
         >
           <form
             onSubmit={handleEditar}
-            className="space-y-4 p-6 rounded-lg shadow-lg bg-white/50"
+            className="space-y-4 "
           >
+            <label className="block text-sm font-bold mb-1 text-gray-900">Nombre</label>
             <input
               type="text"
               value={clienteEditado.nombre}
               onChange={(e) =>
                 setClienteEditado({ ...clienteEditado, nombre: e.target.value })
               }
-              className="w-full border p-2 rounded"
+              className="w-full p-2 rounded-lg bg-gray-300 focus:outline-none focus:ring-2 focus:ring-yellow-500"
               required
             />
+            <label className="block text-sm font-bold mb-1 text-gray-900">Apellido</label>
             <input
               type="text"
               value={clienteEditado.apellido}
@@ -337,9 +393,10 @@ export default function Clientes() {
                   apellido: e.target.value,
                 })
               }
-              className="w-full border p-2 rounded"
+              className="w-full p-2 rounded-lg bg-gray-300 focus:outline-none focus:ring-2 focus:ring-yellow-500"
               required
             />
+            <label className="block text-sm font-bold mb-1 text-gray-900">Telefono</label>
             <input
               type="tel"
               value={clienteEditado.telefono}
@@ -349,24 +406,26 @@ export default function Clientes() {
                   telefono: e.target.value,
                 })
               }
-              className="w-full border p-2 rounded"
+              className="w-full p-2 rounded-lg bg-gray-300 focus:outline-none focus:ring-2 focus:ring-yellow-500"
               required
             />
+            <label className="block text-sm font-bold mb-1 text-gray-900">Correo</label>
             <input
               type="email"
               value={clienteEditado.email}
               onChange={(e) =>
                 setClienteEditado({ ...clienteEditado, email: e.target.value })
               }
-              className="w-full border p-2 rounded"
+              className="w-full p-2 rounded-lg bg-gray-300 focus:outline-none focus:ring-2 focus:ring-yellow-500"
               required
             />
+            <label className="block text-sm font-bold mb-1 text-gray-900">Tipo de Usuario</label>
             <select
               value={clienteEditado.rol}
               onChange={(e) =>
                 setClienteEditado({ ...clienteEditado, rol: e.target.value })
               }
-              className="w-full border p-2 rounded"
+              className="w-full p-2 rounded-lg bg-gray-300 focus:outline-none focus:ring-2 focus:ring-yellow-500"
             >
               <option value="cliente">Cliente</option>
               <option value="admin">Admin</option>
@@ -376,13 +435,13 @@ export default function Clientes() {
               <button
                 type="button"
                 onClick={() => setShowEditModal(false)}
-                className="bg-gray-400 text-white px-4 py-2 rounded"
+                className="bg-gray-400 text-white px-4 py-2 rounded-lg hover:bg-gray-500 transition"
               >
                 Cancelar
               </button>
               <button
                 type="submit"
-                className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
+                className="bg-gradient-to-r from-yellow-500 to-amber-600 hover:opacity-80 text-white font-bold px-4 py-2 rounded-lg transition"
               >
                 Guardar Cambios
               </button>

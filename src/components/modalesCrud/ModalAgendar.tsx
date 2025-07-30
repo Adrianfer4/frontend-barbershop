@@ -12,6 +12,7 @@ type ModalProps = {
 type Barbero = {
   id_usuario: number;
   nombre: string;
+  foto_perfil: string;
 };
 
 type JwtPayload = {
@@ -115,45 +116,58 @@ const ModalAgendar = ({ id_servicio, setMostrarModal }: ModalProps) => {
   };
 
   return (
-    <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm px-4">
       <div className="bg-[#c1cccf] p-6 rounded-2xl w-full max-w-md shadow-2xl border border-neutral-800 relative">
         <button
           onClick={() => setMostrarModal(false)}
-          className="absolute top-3 right-4 text-gray-400 hover:text-white text-2xl font-bold"
+          className="absolute top-3 right-4 text-gray-400 hover:text-red-600 text-2xl font-bold"
+          aria-label="Cerrar"
         >
           ×
         </button>
 
-        <h2 className="text-2xl font-bold text-amber-500 text-center mb-6 uppercase tracking-wide">
+        <h2 className="text-2xl font-bold text-yellow-600 text-center mb-6 uppercase tracking-wide font-[Bebas Neue]">
           Agendar Cita
         </h2>
 
-        <div className="space-y-4">
+        <div className="space-y-4 text-sm text-gray-700">
           <div>
-            <label className="block text-sm font-bold mb-1 text-gray-900">
-              Barbero
-            </label>
-            <select
-              className="w-full bg-gray-300 text-gray-900 border border-neutral-700 rounded-lg px-3 py-2"
-              value={barbero}
-              onChange={(e) => setBarbero(e.target.value)}
-            >
-              <option value="">Selecciona un barbero</option>
-              {barberos.map((b) => (
-                <option key={b.id_usuario} value={b.id_usuario}>
-                  {b.nombre}
-                </option>
-              ))}
-            </select>
+            <label className="block font-bold mb-1">Barbero</label>
+            <div className="relative">
+              <select
+                className="w-full p-2 rounded-lg bg-gray-300 focus:outline-none focus:ring-2 focus:ring-yellow-500"
+                value={barbero}
+                onChange={(e) => setBarbero(e.target.value)}
+                onMouseOver={() => console.log("hover")}
+              >
+                <option value="">Selecciona un barbero</option>
+                {barberos.map((b) => (
+                  <option key={b.id_usuario} value={b.id_usuario}>
+                    {b.nombre}
+                  </option>
+                ))}
+              </select>
+
+              {barbero && (
+                <div className="absolute bottom-15 left-0 mt-2 w-20 h-20 z-10 border border-amber-600 bg-white rounded-lg overflow-hidden shadow-lg">
+                  <img
+                    src={`http://localhost:3000/uploads/usuarios/${
+                      barberos.find((b) => b.id_usuario === Number(barbero))
+                        ?.foto_perfil
+                    }`}
+                    alt="Foto del barbero"
+                    className="w-full h-full object-cover"
+                  />
+                </div>
+              )}
+            </div>
           </div>
 
           <div>
-            <label className="block text-sm font-bold mb-1 text-gray-900">
-              Fecha
-            </label>
+            <label className="block font-bold mb-1">Fecha</label>
             <input
               type="date"
-              className="w-full bg-gray-300 text-gray-900 font-bold border border-neutral-700 rounded-lg px-3 py-2"
+              className="w-full p-2 rounded-lg bg-gray-300 focus:outline-none focus:ring-2 focus:ring-yellow-500"
               value={fecha}
               onChange={(e) => setFecha(e.target.value)}
               min={format(new Date(), "yyyy-MM-dd")}
@@ -162,11 +176,9 @@ const ModalAgendar = ({ id_servicio, setMostrarModal }: ModalProps) => {
           </div>
 
           <div>
-            <label className="block text-sm font-bold mb-1 text-gray-900">
-              Horario disponible
-            </label>
+            <label className="block font-bold mb-1">Horario disponible</label>
             <select
-              className="w-full bg-gray-300 text-gray-900 border border-neutral-700 rounded-lg px-3 py-2"
+              className="w-full p-2 rounded-lg bg-gray-300 focus:outline-none focus:ring-2 focus:ring-yellow-500"
               value={hora}
               onChange={(e) => setHora(e.target.value)}
             >
@@ -182,13 +194,13 @@ const ModalAgendar = ({ id_servicio, setMostrarModal }: ModalProps) => {
           <div className="flex justify-end space-x-3 pt-4">
             <button
               onClick={() => setMostrarModal(false)}
-              className="bg-gray-600 hover:bg-gray-700 text-white px-4 py-2 rounded-lg transition"
+              className="bg-gray-400 text-white px-4 py-2 rounded-lg hover:bg-gray-500 transition"
             >
               Cancelar
             </button>
             <button
               onClick={agendar}
-              className="bg-gradient-to-r from-amber-600 to-yellow-500 hover:opacity-90 text-white font-bold px-4 py-2 rounded-lg transition"
+              className="bg-gradient-to-r from-yellow-500 to-amber-600 hover:opacity-80 text-white font-bold px-4 py-2 rounded-lg transition"
             >
               Confirmar cita
             </button>

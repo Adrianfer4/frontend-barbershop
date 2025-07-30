@@ -1,5 +1,7 @@
 import { useEffect, useState } from "react";
 import Swal from "sweetalert2";
+import ModalCitaAdmin from "../modalesCrud/ModalCitaAdmin";
+import ExportarCitasModal from "../modalesCrud/ExportarCitasModal";
 
 type Cita = {
   id_cita: number;
@@ -7,15 +9,29 @@ type Cita = {
   barbero_nombre: string;
   fecha: string;
   hora: string;
-  servicio: string;
+  servicio: number;
   nombre_servicio: string;
   estado: "pendiente" | "realizada" | "cancelada";
+  id_barbero: number;
 };
 
 export default function Citas() {
   const [citas, setCitas] = useState<Cita[]>([]);
-  const [estadoFiltro, setEstadoFiltro] = useState<string>("");
-  const [fechaFiltro, setFechaFiltro] = useState<string>("");
+  const [estadoFiltro, setEstadoFiltro] = useState("");
+  const [fechaFiltro, setFechaFiltro] = useState("");
+  const [mostrarModalCrear, setMostrarModalCrear] = useState(false);
+  const [mostrarModalEditar, setMostrarModalEditar] = useState(false);
+  const [citaEditar, setCitaEditar] = useState<Cita | null>(null);
+  const [mostrarModalExportar, setMostrarModalExportar] = useState(false);
+
+  // Paginación
+  const [paginaActual, setPaginaActual] = useState(1);
+  const citasPorPagina = 10;
+  const totalPaginas = Math.ceil(citas.length / citasPorPagina);
+  const citasActuales = citas.slice(
+    (paginaActual - 1) * citasPorPagina,
+    paginaActual * citasPorPagina
+  );
 
   const fetchCitas = async () => {
     try {
@@ -23,8 +39,7 @@ export default function Citas() {
       if (estadoFiltro) params.append("estado", estadoFiltro);
       if (fechaFiltro) params.append("fecha", fechaFiltro);
 
-      const token = localStorage.getItem("token"); // Asegúrate de que esté guardado al iniciar sesión
-
+      const token = localStorage.getItem("token");
       const res = await fetch(
         `http://localhost:3000/api/citas/admin?${params}`,
         {
@@ -35,17 +50,16 @@ export default function Citas() {
       );
 
       const data = await res.json();
-      console.log("Citas actualizadas:", data);
       setCitas(data);
-    } catch (error) {
-      console.error("Error al cargar citas:", error);
+      setPaginaActual(1); // Reset paginación al cambiar filtro
+    } catch {
       Swal.fire("Error", "No se pudieron cargar las citas", "error");
     }
   };
 
   const cambiarEstado = async (id: number, nuevoEstado: Cita["estado"]) => {
     try {
-      const res = await fetch(`http://localhost:3000/api/citas/${id}/estado`, {
+      await fetch(`http://localhost:3000/api/citas/${id}/estado`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
@@ -53,8 +67,6 @@ export default function Citas() {
         },
         body: JSON.stringify({ estado: nuevoEstado }),
       });
-
-      if (!res.ok) throw new Error("Error al cambiar estado");
 
       await fetchCitas();
       Swal.fire("Estado actualizado", "", "success");
@@ -88,6 +100,11 @@ export default function Citas() {
     }
   };
 
+  const abrirModalEditar = (cita: Cita) => {
+    setCitaEditar(cita);
+    setMostrarModalEditar(true);
+  };
+
   useEffect(() => {
     fetchCitas();
   }, [estadoFiltro, fechaFiltro]);
@@ -114,9 +131,24 @@ export default function Citas() {
 
   return (
     <div className="p-4 bg-gray-100 shadow rounded-xl">
-      <h1 className="text-2xl font-bold mb-4 text-center">Gestión de Citas</h1>
+      <div className="grid grid-cols-3 md:grid-cols-3 items-center mb-6">
+        <div></div> {/* Izquierda vacía */}
+        <h1
+          className="text-3xl uppercase text-amber-600 text-center font-semi-bold "
+          style={{ fontFamily: "'Russo One', sans-serif" }}
+        >
+          Gestión de Citas
+        </h1>
+        <div className="text-right">
+          <button
+            onClick={() => setMostrarModalExportar(true)}
+            className="bg-yellow-500 hover:bg-yellow-600 text-white px-4 py-2 rounded text-sm transition"
+          >
+            Exportar Citas
+          </button>
+        </div>
+      </div>
 
-      {/* Filtros */}
       <div className="flex flex-wrap gap-4 mb-4 items-center">
         <label className="flex items-center gap-2 text-sm">
           Estado:
@@ -160,14 +192,14 @@ export default function Citas() {
             </tr>
           </thead>
           <tbody>
-            {citas.length === 0 ? (
+            {citasActuales.length === 0 ? (
               <tr>
                 <td colSpan={7} className="text-center p-4">
                   No hay citas disponibles.
                 </td>
               </tr>
             ) : (
-              citas.map((cita) => (
+              citasActuales.map((cita) => (
                 <tr key={cita.id_cita} className="text-center">
                   <td className="border p-2 break-words">
                     {cita.cliente_nombre}
@@ -204,6 +236,14 @@ export default function Citas() {
                       <option value="realizada">Realizada</option>
                       <option value="cancelada">Cancelada</option>
                     </select>
+
+                    <button
+                      onClick={() => abrirModalEditar(cita)}
+                      className="text-blue-600 hover:underline"
+                    >
+                      Editar
+                    </button>
+
                     <button
                       onClick={() => eliminarCita(cita.id_cita)}
                       className="text-red-600 hover:underline"
@@ -217,6 +257,74 @@ export default function Citas() {
           </tbody>
         </table>
       </div>
+
+      {/* Paginacion */}
+      <div className="flex justify-center items-center mt-4 gap-2">
+        <button
+          onClick={() => setPaginaActual((prev) => Math.max(prev - 1, 1))}
+          disabled={paginaActual === 1}
+          className="px-3 py-1 bg-gray-300 rounded hover:bg-gray-400 disabled:opacity-50"
+        >
+          Anterior
+        </button>
+
+        {Array.from({ length: totalPaginas }, (_, i) => (
+          <button
+            key={i}
+            onClick={() => setPaginaActual(i + 1)}
+            className={`px-3 py-1 rounded ${
+              paginaActual === i + 1
+                ? "bg-amber-600 text-white"
+                : "bg-gray-200 hover:bg-gray-300"
+            }`}
+          >
+            {i + 1}
+          </button>
+        ))}
+
+        <button
+          onClick={() =>
+            setPaginaActual((prev) => Math.min(prev + 1, totalPaginas))
+          }
+          disabled={paginaActual === totalPaginas}
+          className="px-3 py-1 bg-gray-300 rounded hover:bg-gray-400 disabled:opacity-50 transition"
+        >
+          Siguiente
+        </button>
+      </div>
+
+        <button
+          onClick={() => setMostrarModalCrear(true)}
+          className="fixed bottom-8 right-6 bg-amber-600 text-white px-4 py-2 rounded-full shadow-lg hover:bg-amber-700 z-50 transition"
+        >
+          + Crear Cita
+        </button>
+
+      {/* Modales */}
+      {mostrarModalCrear && (
+        <ModalCitaAdmin
+          setMostrarModal={setMostrarModalCrear}
+          onGuardado={fetchCitas}
+        />
+      )}
+
+      {mostrarModalEditar && citaEditar && (
+        <ModalCitaAdmin
+          cita={citaEditar}
+          setMostrarModal={(mostrar) => {
+            setMostrarModalEditar(mostrar);
+            if (!mostrar) setCitaEditar(null);
+          }}
+          onGuardado={fetchCitas}
+        />
+      )}
+
+      <ExportarCitasModal
+        mostrar={mostrarModalExportar}
+        onClose={() => setMostrarModalExportar(false)}
+        citas={citas}
+        colorEstado={colorEstado}
+      />
     </div>
   );
 }

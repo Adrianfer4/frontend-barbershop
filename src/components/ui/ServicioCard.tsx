@@ -1,5 +1,5 @@
 import { useState } from "react";
-import ModalAgendar from "../crud/ModalAgendar";
+import ModalAgendar from "../modalesCrud/ModalAgendar";
 
 type ServicioCardProps = {
   id_servicio: number;

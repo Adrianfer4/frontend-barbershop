@@ -14,15 +14,14 @@ const Nosotros = () => {
 
   return (
     <section
+      id="nosotros"
       ref={ref}
       className="relative py-24 px-6 md:px-20 lg:px-40 bg-gradient-to-br from-zinc-900 via-amber-800 to-yellow-500 text-white text-center"
     >
       <div className="grid grid-cols-1 md:grid-cols-2 gap-10 items-center">
         {/* Texto animado */}
         <div>
-          
           <motion.h2
-            id="nosotros"
             variants={fadeUp}
             initial="hidden"
             animate={isInView ? "visible" : "hidden"}
@@ -42,9 +41,9 @@ const Nosotros = () => {
           >
             En Jamaica Estilo, cada corte es una obra de arte y cada cliente una
             historia. Nos enorgullecemos de ofrecer una experiencia única,
-            combinando el estilo urbano con la calidez caribeña. Nuestro equipo de
-            barberos profesionales te acompaña en cada paso para lograr un look
-            auténtico, moderno y con actitud.
+            combinando el estilo urbano con la calidez caribeña. Nuestro equipo
+            de barberos profesionales te acompaña en cada paso para lograr un
+            look auténtico, moderno y con actitud.
           </motion.p>
         </div>
 

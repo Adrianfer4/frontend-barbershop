@@ -1,6 +1,6 @@
 // src/pages/dashboard/Servicios.tsx
 import { useEffect, useState } from "react";
-import ModalServicio from "../crud/Modal";
+import ModalServicio from "../modalesCrud/Modal";
 import Swal from "sweetalert2";
 
 interface Servicio {
@@ -194,7 +194,12 @@ export default function Servicios() {
   return (
     <div className="bg-gray-100 rounded-xl">
       <div className="p-6">
-        <h1 className="text-2xl font-bold mb-4">Gestión de Servicios</h1>
+        <h1
+          className="text-3xl uppercase text-amber-600 text-center font-semi-bold mb-6"
+          style={{ fontFamily: "'Russo One', sans-serif" }}
+        >
+          Gestión de Servicios
+        </h1>
 
         <table className="w-full bg-white table-auto border border-gray-300">
           <thead className="bg-gray-100">
@@ -207,35 +212,45 @@ export default function Servicios() {
             </tr>
           </thead>
           <tbody>
-            {servicios.map((servicio) => (
-              <tr key={servicio.id_servicio} className="text-center">
-                <td className="p-2 border">{servicio.nombre_servicio}</td>
-                <td className="p-2 border">{servicio.descripcion}</td>
-                <td className="p-2 border">${servicio.precio}</td>
-                <td className="p-2 border">{servicio.duracion}</td>
-                <td className="p-2 border">
-                  <button
-                    className="text-blue-600 hover:underline mr-2"
-                    onClick={() => abrirModalEdicion(servicio)}
-                  >
-                    Editar
-                  </button>
-                  <button
-                    className="text-red-600 hover:underline"
-                    onClick={() => handleEliminarServicio(servicio.id_servicio)}
-                  >
-                    Eliminar
-                  </button>
+            {servicios.length === 0 ? (
+              <tr>
+                <td colSpan={6} className="text-center p-4">
+                  No hay resultados.
                 </td>
               </tr>
-            ))}
+            ) : (
+              servicios.map((servicio) => (
+                <tr key={servicio.id_servicio} className="text-center">
+                  <td className="p-2 border">{servicio.nombre_servicio}</td>
+                  <td className="p-2 border">{servicio.descripcion}</td>
+                  <td className="p-2 border">${servicio.precio}</td>
+                  <td className="p-2 border">{servicio.duracion}</td>
+                  <td className="p-2 border">
+                    <button
+                      className="text-blue-600 hover:underline mr-2 transition"
+                      onClick={() => abrirModalEdicion(servicio)}
+                    >
+                      Editar
+                    </button>
+                    <button
+                      className="text-red-600 hover:underline"
+                      onClick={() =>
+                        handleEliminarServicio(servicio.id_servicio)
+                      }
+                    >
+                      Eliminar
+                    </button>
+                  </td>
+                </tr>
+              ))
+            )}
           </tbody>
         </table>
 
         {/* Modal Crear */}
         <button
           onClick={() => setShowModal(true)}
-          className="mt-4 bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
+          className="fixed bottom-8 right-6 bg-amber-600 text-white px-4 py-2 rounded-full shadow-lg hover:bg-amber-700 z-50 transition"
         >
           + Crear Servicio
         </button>
@@ -249,24 +264,27 @@ export default function Servicios() {
           >
             <form
               onSubmit={handleCrearServicio}
-              className="space-y-4  p-6 rounded-lg shadow-lg"
+              className="space-y-4"
             >
+              <label className="block text-sm font-bold mb-1 text-gray-900">Nombre</label>
               <input
                 type="text"
                 placeholder="Nombre del servicio"
                 value={nombre}
                 onChange={(e) => setNombre(e.target.value)}
                 required
-                className="w-full border p-2 rounded"
+                className="w-full p-2 rounded-lg bg-gray-300 focus:outline-none focus:ring-2 focus:ring-yellow-500"
               />
+              <label className="block text-sm font-bold mb-1 text-gray-900">Descripcion</label>
               <input
                 type="text"
                 placeholder="Descripción del servicio"
                 value={descripcion}
                 onChange={(e) => setDescripcion(e.target.value)}
                 required
-                className="w-full border p-2 rounded"
+                className="w-full p-2 rounded-lg bg-gray-300 focus:outline-none focus:ring-2 focus:ring-yellow-500"
               />
+              <label className="block text-sm font-bold mb-1 text-gray-900">Precio</label>
               <div className="relative">
                 <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500">
                   $
@@ -279,9 +297,10 @@ export default function Servicios() {
                   value={precio}
                   onChange={(e) => setPrecio(Number(e.target.value))}
                   required
-                  className="w-full border p-2 rounded pl-7"
+                  className="w-full p-2 rounded pl-7 rounded-lg bg-gray-300 focus:outline-none focus:ring-2 focus:ring-yellow-500"
                 />
               </div>
+              <label className="block text-sm font-bold mb-1 text-gray-900">Duracion</label>
               <input
                 type="number"
                 placeholder="Duración en minutos"
@@ -289,16 +308,16 @@ export default function Servicios() {
                 onChange={(e) => setDuracion(e.target.value)}
                 min={1}
                 required
-                className="w-full border p-2 rounded"
+                className="w-full p-2 rounded-lg bg-gray-300 focus:outline-none focus:ring-2 focus:ring-yellow-500"
               />
               <label className="block w-full">
-                <span className="text-sm font-medium text-gray-700">
+                <span className="block text-sm font-bold mb-1 text-gray-900">
                   Imagen del servicio
                 </span>
                 <div className="mt-1 flex items-center gap-4">
                   <label
                     htmlFor="imagen"
-                    className="cursor-pointer inline-flex items-center px-4 py-2 bg-white text-sm font-medium text-gray-600 border border-gray-300 rounded-lg shadow-sm hover:bg-gray-50 transition duration-150"
+                    className="cursor-pointer inline-flex items-center px-4 py-2 bg-white/50 text-sm font-medium text-gray-600 border border-gray-300 rounded-lg shadow-sm hover:bg-gray-50 transition duration-150"
                   >
                     📁 Subir imagen
                   </label>
@@ -329,13 +348,13 @@ export default function Servicios() {
                 <button
                   type="button"
                   onClick={() => setShowModal(false)}
-                  className="bg-gray-400 text-white px-4 py-2 rounded hover:bg-gray-500"
+                  className="bg-gray-400 text-white px-4 py-2 rounded-lg hover:bg-gray-500 transition"
                 >
                   Cancelar
                 </button>
                 <button
                   type="submit"
-                  className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
+                  className="bg-gradient-to-r from-yellow-500 to-amber-600 hover:opacity-80 text-white font-bold px-4 py-2 rounded-lg transition"
                 >
                   Guardar
                 </button>
@@ -355,8 +374,9 @@ export default function Servicios() {
           >
             <form
               onSubmit={handleEditarServicio}
-              className="space-y-4 p-6 rounded-lg shadow-lg"
+              className="space-y-4"
             >
+              <label className="block text-sm font-bold mb-1 text-gray-900">Nombre</label>
               <input
                 type="text"
                 placeholder="Nombre del servicio"
@@ -368,8 +388,9 @@ export default function Servicios() {
                   })
                 }
                 required
-                className="w-full border p-2 rounded"
+                className="w-full p-2 rounded-lg bg-gray-300 focus:outline-none focus:ring-2 focus:ring-yellow-500"
               />
+              <label className="block text-sm font-bold mb-1 text-gray-900">Descripcion</label>
               <input
                 type="text"
                 placeholder="(descripción)"
@@ -381,8 +402,9 @@ export default function Servicios() {
                   })
                 }
                 required
-                className="w-full border p-2 rounded"
+                className="w-full p-2 rounded-lg bg-gray-300 focus:outline-none focus:ring-2 focus:ring-yellow-500"
               />
+              <label className="block text-sm font-bold mb-1 text-gray-900">Precio</label>
               <div className="relative">
                 <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500">
                   $
@@ -397,9 +419,10 @@ export default function Servicios() {
                     })
                   }
                   required
-                  className="w-full border p-2 rounded pl-7"
+                  className="w-full p-2 rounded pl-7 rounded-lg bg-gray-300 focus:outline-none focus:ring-2 focus:ring-yellow-500"
                 />
               </div>
+              <label className="block text-sm font-bold mb-1 text-gray-900">Duracion</label>
               <input
                 type="number"
                 placeholder="Duración en minutos"
@@ -411,16 +434,16 @@ export default function Servicios() {
                   })
                 }
                 required
-                className="w-full border p-2 rounded"
+                className="w-full p-2 rounded-lg bg-gray-300 focus:outline-none focus:ring-2 focus:ring-yellow-500"
               />
               <label className="block w-full">
-                <span className="text-sm font-medium text-gray-700">
+                <span className="block text-sm font-bold mb-1 text-gray-900">
                   Imagen del servicio
                 </span>
                 <div className="mt-1 flex items-center gap-4">
                   <label
                     htmlFor="imagen"
-                    className="cursor-pointer inline-flex items-center px-4 py-2 bg-white text-sm font-medium text-gray-600 border border-gray-300 rounded-lg shadow-sm hover:bg-gray-50 transition duration-150"
+                    className="cursor-pointer inline-flex items-center px-4 py-2 bg-white/50 text-sm font-medium text-gray-600 border border-gray-300 rounded-lg shadow-sm hover:bg-gray-50 transition duration-150"
                   >
                     📁 Cambiar imagen
                   </label>
@@ -466,13 +489,13 @@ export default function Servicios() {
                     setShowEditModal(false);
                     setServicioEditado(null);
                   }}
-                  className="bg-gray-400 text-white px-4 py-2 rounded hover:bg-gray-500"
+                  className="bg-gray-400 text-white px-4 py-2 rounded-lg hover:bg-gray-500 transition"
                 >
                   Cancelar
                 </button>
                 <button
                   type="submit"
-                  className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
+                  className="bg-gradient-to-r from-yellow-500 to-amber-600 hover:opacity-80 text-white font-bold px-4 py-2 rounded-lg transition"
                 >
                   Guardar Cambios
                 </button>

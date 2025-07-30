@@ -135,7 +135,7 @@ export default function LoginForm() {
         <button
           type="button"
           onClick={togglePasswordVisibility}
-          className="absolute right-2 top-1/3 -translate-y-1/5 text-gray-500"
+          className="absolute right-2 top-1/3 -translate-y-1/5 text-gray-500 transition"
           tabIndex={-1}
         >
           {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
@@ -161,7 +161,7 @@ export default function LoginForm() {
       <div className="text-center text-sm mb-2 p-2">
         <button
           type="button"
-          className="text-blue-500 hover:underline"
+          className="text-blue-500 hover:underline transition"
           onClick={() => navigate("/forgot-password")}
         >
           ¿Olvidaste tu contraseña?
@@ -170,7 +170,7 @@ export default function LoginForm() {
       <div className="text-center text-sm mb-4">
         <button
           type="button"
-          className="text-blue-500 hover:underline"
+          className="text-blue-500 hover:underline transition"
           onClick={() => navigate("/register")}
         >
           Registrarse

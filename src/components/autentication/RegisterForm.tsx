@@ -183,7 +183,7 @@ export default function RegisterForm() {
         <button
           type="button"
           onClick={() => setMostrarPass((prev) => !prev)}
-          className="absolute right-2 top-1/3 -translate-y-1/3 text-gray-500"
+          className="absolute right-2 top-1/3 -translate-y-1/3 text-gray-500 transition"
           tabIndex={-1}
         >
           {mostrarPass ? <EyeOff size={20} /> : <Eye size={20} />}
@@ -215,7 +215,7 @@ export default function RegisterForm() {
         <button
           type="button"
           onClick={() => setMostrarConfirmar((prev) => !prev)}
-          className="absolute right-2 top-1/3 -translate-y-1/3 text-gray-500"
+          className="absolute right-2 top-1/3 -translate-y-1/3 text-gray-500 transition"
           tabIndex={-1}
         >
           {mostrarConfirmar ? <EyeOff size={20} /> : <Eye size={20} />}
@@ -241,7 +241,7 @@ export default function RegisterForm() {
       <div className="text-center text-sm mb-2 p-2">
         <button
           type="button"
-          className="text-blue-500 hover:underline"
+          className="text-blue-500 hover:underline transition"
           onClick={() => navigate("/login")}
         >
           ¿Ya estoy registrado?
