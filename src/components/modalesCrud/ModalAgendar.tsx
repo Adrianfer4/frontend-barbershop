@@ -4,6 +4,9 @@ import Swal from "sweetalert2";
 import { jwtDecode } from "jwt-decode";
 import { useNavigate } from "react-router-dom";
 
+const BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000';
+const API_BASE = `${BASE_URL}/api`;
+
 type ModalProps = {
   id_servicio: number;
   setMostrarModal: (mostrar: boolean) => void;
@@ -33,7 +36,7 @@ const ModalAgendar = ({ id_servicio, setMostrarModal }: ModalProps) => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    fetch("http://localhost:3000/api/usuarios?rol=barbershop")
+    fetch(`${API_BASE}/usuarios?rol=barbershop`)
       .then((res) => res.json())
       .then(setBarberos);
   }, []);
@@ -41,7 +44,7 @@ const ModalAgendar = ({ id_servicio, setMostrarModal }: ModalProps) => {
   useEffect(() => {
     if (fecha && id_servicio && barbero) {
       fetch(
-        `http://localhost:3000/api/citas/horarios?fecha=${fecha}&servicio=${id_servicio}&barbero=${barbero}`
+        `${API_BASE}/citas/horarios?fecha=${fecha}&servicio=${id_servicio}&barbero=${barbero}`
       )
         .then((res) => res.json())
         .then((data) => {
@@ -151,7 +154,7 @@ const ModalAgendar = ({ id_servicio, setMostrarModal }: ModalProps) => {
               {barbero && (
                 <div className="absolute bottom-15 left-0 mt-2 w-20 h-20 z-10 border border-amber-600 bg-white rounded-lg overflow-hidden shadow-lg">
                   <img
-                    src={`http://localhost:3000/uploads/usuarios/${
+                    src={`${BASE_URL}/uploads/usuarios/${
                       barberos.find((b) => b.id_usuario === Number(barbero))
                         ?.foto_perfil
                     }`}

@@ -3,6 +3,8 @@ import Swal from "sweetalert2";
 import GraficosIngresos from "../graficosIngresos/GraficosIngresos";
 import IngresoModal from "../modalesCrud/IngresoModal";
 
+const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:3000/api';
+
 type Ingreso = {
   id_ingreso: number;
   id_barbero: number;
@@ -107,7 +109,7 @@ export default function Ingresos() {
     if (barberoSeleccionado) params.append("id_barbero", barberoSeleccionado);
 
     const token = localStorage.getItem("token");
-    const res = await fetch(`http://localhost:3000/api/ingresos?${params}`, {
+    const res = await fetch(`${API_BASE}/ingresos?${params}`, {
       headers: { Authorization: `Bearer ${token}` },
     });
     const data: Ingreso[] = await res.json();
@@ -136,7 +138,7 @@ export default function Ingresos() {
 
     const token = localStorage.getItem("token");
     const res = await fetch(
-      `http://localhost:3000/api/ingresos/agrupado?${params}`,
+      `${API_BASE}/ingresos/agrupado?${params}`,
       { headers: { Authorization: `Bearer ${token}` } }
     );
     const data: IngresoAgrupado[] = await res.json();
@@ -153,7 +155,7 @@ export default function Ingresos() {
     if (!confirm.isConfirmed) return;
 
     const token = localStorage.getItem("token");
-    await fetch(`http://localhost:3000/api/ingresos/${id}`, {
+    await fetch(`${API_BASE}/ingresos/${id}`, {
       method: "DELETE",
       headers: { Authorization: `Bearer ${token}` },
     });

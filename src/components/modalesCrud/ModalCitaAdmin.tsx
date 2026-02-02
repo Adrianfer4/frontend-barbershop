@@ -2,6 +2,8 @@ import { useEffect, useState } from "react";
 import { format, addDays } from "date-fns";
 import Swal from "sweetalert2";
 
+const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:3000/api';
+
 type ModalCitaAdminProps = {
   cita?: {
     id_cita: number;
@@ -42,7 +44,7 @@ const ModalCitaAdmin = ({ cita, setMostrarModal, onGuardado }: ModalCitaAdminPro
   const token = localStorage.getItem("token");
 
   useEffect(() => {
-    fetch("http://localhost:3000/api/usuarios?rol=barbershop")
+    fetch(`${API_BASE}/usuarios?rol=barbershop`)
       .then((res) => res.json())
       .then(setBarberos);
 
@@ -54,7 +56,7 @@ const ModalCitaAdmin = ({ cita, setMostrarModal, onGuardado }: ModalCitaAdminPro
   useEffect(() => {
     if (fecha && servicio && barbero) {
       fetch(
-        `http://localhost:3000/api/citas/horarios?fecha=${fecha}&servicio=${servicio}&barbero=${barbero}`
+        `${API_BASE}/citas/horarios?fecha=${fecha}&servicio=${servicio}&barbero=${barbero}`
       )
         .then((res) => res.json())
         .then((data) => setHorarios(Array.isArray(data) ? data : []))
@@ -70,8 +72,8 @@ const ModalCitaAdmin = ({ cita, setMostrarModal, onGuardado }: ModalCitaAdminPro
     }
 
     const url = cita
-      ? `http://localhost:3000/api/citas/${cita.id_cita}`
-      : `http://localhost:3000/api/citas`;
+      ? `${API_BASE}/citas/${cita.id_cita}`
+      : `${API_BASE}/citas`;
 
     const metodo = cita ? "PUT" : "POST";
 

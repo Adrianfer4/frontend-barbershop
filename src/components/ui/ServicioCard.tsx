@@ -1,6 +1,8 @@
 import { useState } from "react";
 import ModalAgendar from "../modalesCrud/ModalAgendar";
 
+const BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000';
+
 type ServicioCardProps = {
   id_servicio: number;
   nombre: string;
@@ -25,7 +27,7 @@ const ServicioCard = ({
       <div className="relative">
         {imagen ? (
           <img
-            src={`http://localhost:3000/uploads/servicios/${imagen}`}
+            src={`${BASE_URL}/uploads/servicios/${imagen}`}
             alt={`Imagen de ${nombre}`}
             className="w-full h-48 object-cover rounded-xl border border-neutral-700"
           />

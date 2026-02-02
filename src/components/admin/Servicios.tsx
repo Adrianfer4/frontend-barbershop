@@ -2,6 +2,8 @@ import { useEffect, useState } from "react";
 import ModalServicio from "../modalesCrud/Modal";
 import Swal from "sweetalert2";
 
+const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:3000/api';
+
 interface Servicio {
   id_servicio: number;
   nombre_servicio: string;
@@ -26,7 +28,7 @@ export default function Servicios() {
 
   const fetchServicios = async () => {
     try {
-      const res = await fetch("http://localhost:3000/api/servicios");
+      const res = await fetch(`${API_BASE}/servicios`);
       const data = await res.json();
       setServicios(data);
     } catch (error) {
@@ -131,7 +133,7 @@ export default function Servicios() {
       }
 
       const res = await fetch(
-        `http://localhost:3000/api/servicios/${servicioEditado.id_servicio}`,
+        `${API_BASE}/servicios/${servicioEditado.id_servicio}`,
         {
           method: "PUT",
           body: formData,

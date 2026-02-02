@@ -3,6 +3,8 @@ import ServicioCard from "./ServicioCard";
 import Swal from "sweetalert2";
 import LoaderBarbershop from "../../utils/LoaderBarberia";
 
+const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:3000/api';
+
 type Servicio = {
   id_servicio: number;
   nombre_servicio: string;
@@ -17,7 +19,7 @@ const ServicioSection = () => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetch("http://localhost:3000/api/servicios")
+    fetch(`${API_BASE}/servicios`)
       .then((res) => res.json())
       .then((data) => {
         setTimeout(() => {
