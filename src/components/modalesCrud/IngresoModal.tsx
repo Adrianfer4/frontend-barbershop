@@ -1,6 +1,9 @@
 import { useEffect, useState } from "react";
 import Swal from "sweetalert2";
 
+const BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:3000";
+const API_BASE = `${BASE_URL}/api`;
+
 interface Props {
   show: boolean;
   onClose: () => void;
@@ -58,7 +61,7 @@ export default function IngresoModal({
   useEffect(() => {
     if (!modoEdicion && form.id_servicio) {
       const servicio = servicios.find(
-        (s) => s.id_servicio === Number(form.id_servicio)
+        (s) => s.id_servicio === Number(form.id_servicio),
       );
       if (servicio) {
         const precioNumero = Number(servicio.precio);
@@ -76,8 +79,8 @@ export default function IngresoModal({
     e.preventDefault();
     const token = localStorage.getItem("token");
     const endpoint = modoEdicion
-      ? `http://localhost:3000/api/ingresos/${ingreso?.id_ingreso}`
-      : "http://localhost:3000/api/ingresos";
+      ? `${API_BASE}/ingresos/${ingreso?.id_ingreso}`
+      : `${API_BASE}/ingresos`;
     const method = modoEdicion ? "PUT" : "POST";
 
     try {
@@ -103,7 +106,7 @@ export default function IngresoModal({
       Swal.fire(
         "Éxito",
         modoEdicion ? "Ingreso actualizado" : "Ingreso creado",
-        "success"
+        "success",
       );
     } catch {
       Swal.fire("Error", "No se pudo guardar el ingreso", "error");
@@ -120,13 +123,18 @@ export default function IngresoModal({
           ×
         </button>
 
-        <h2 className="text-2xl font-bold text-amber-500 text-center mb-6 uppercase tracking-wide" style={{ fontFamily: "'Russo One', sans-serif" }}>
+        <h2
+          className="text-2xl font-bold text-amber-500 text-center mb-6 uppercase tracking-wide"
+          style={{ fontFamily: "'Russo One', sans-serif" }}
+        >
           {modoEdicion ? "Editar Ingreso" : "Nuevo Ingreso"}
         </h2>
 
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
-            <label className="block text-sm font-bold mb-1 text-gray-900">Barbero</label>
+            <label className="block text-sm font-bold mb-1 text-gray-900">
+              Barbero
+            </label>
             <select
               className="w-full p-2 rounded-lg bg-gray-300 focus:outline-none focus:ring-2 focus:ring-yellow-500"
               value={form.id_barbero}
@@ -143,11 +151,15 @@ export default function IngresoModal({
           </div>
 
           <div>
-            <label className="block text-sm font-bold mb-1 text-gray-900">Servicio</label>
+            <label className="block text-sm font-bold mb-1 text-gray-900">
+              Servicio
+            </label>
             <select
               className="w-full p-2 rounded-lg bg-gray-300 focus:outline-none focus:ring-2 focus:ring-yellow-500"
               value={form.id_servicio}
-              onChange={(e) => setForm({ ...form, id_servicio: e.target.value })}
+              onChange={(e) =>
+                setForm({ ...form, id_servicio: e.target.value })
+              }
               required
             >
               <option value="">Selecciona un servicio</option>
@@ -160,12 +172,13 @@ export default function IngresoModal({
           </div>
 
           <div>
-            <label className="block text-sm font-bold mb-1 text-gray-900">Monto</label>
+            <label className="block text-sm font-bold mb-1 text-gray-900">
+              Monto
+            </label>
             <input
               type="number"
               step="0.01"
               value={form.monto}
-              readOnly={!modoEdicion}
               onChange={(e) => setForm({ ...form, monto: e.target.value })}
               className="w-full p-2 rounded-lg bg-gray-300 focus:outline-none focus:ring-2 focus:ring-yellow-500"
               required

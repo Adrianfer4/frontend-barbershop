@@ -1,6 +1,8 @@
 import { useState } from "react";
 import Swal from "sweetalert2";
 
+const API_BASE = import.meta.env.VITE_API_URL || "http://localhost:3000/api";
+
 export default function ForgotPasswordForm() {
   const [email, setEmail] = useState<string>("");
   const [mensaje, setMensaje] = useState<string>("");
@@ -12,14 +14,11 @@ export default function ForgotPasswordForm() {
     setError("");
 
     try {
-      const res = await fetch(
-        "http://localhost:3000/api/auth/forgot-password",
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ email }),
-        }
-      );
+      const res = await fetch(`${API_BASE}/auth/forgot-password`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email }),
+      });
 
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || "Error al enviar el correo");
@@ -31,6 +30,7 @@ export default function ForgotPasswordForm() {
         title: "Correo enviado",
         text: data.mensaje || "Revisa tu correo para restablecer la contraseña",
       });
+      setEmail("");
     } catch (err: unknown) {
       let message = "Error desconocido";
       if (err instanceof Error) message = err.message;
@@ -75,7 +75,7 @@ export default function ForgotPasswordForm() {
             Enviar enlace de recuperación
           </button>
         </form>
-        {mensaje && <p className="text-green-600 mt-4">{mensaje}</p>}
+
         {mensaje && (
           <p className="text-green-600 mt-4 text-center">{mensaje}</p>
         )}

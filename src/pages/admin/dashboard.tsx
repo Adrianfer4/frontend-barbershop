@@ -13,7 +13,7 @@ export default function Dashboard() {
     switch (vista) {
       case "dashboard":
         return <DashboardAdmin />;
-      case "clientes":
+      case "usuarios":
         return <Clientes />;
       case "servicios":
         return <Servicios />;

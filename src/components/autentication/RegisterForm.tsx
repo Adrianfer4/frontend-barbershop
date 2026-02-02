@@ -3,6 +3,8 @@ import { useNavigate } from "react-router-dom";
 import { Eye, EyeOff } from "lucide-react";
 import Swal from "sweetalert2";
 
+const API_BASE = import.meta.env.VITE_API_URL || "http://localhost:3000/api";
+
 export default function RegisterForm() {
   const [nombre, setNombre] = useState("");
   const [apellido, setApellido] = useState("");
@@ -55,7 +57,7 @@ export default function RegisterForm() {
     if (!validate()) return;
 
     try {
-      const response = await fetch("http://localhost:3000/api/auth/register", {
+      const response = await fetch(`${API_BASE}/auth/register`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

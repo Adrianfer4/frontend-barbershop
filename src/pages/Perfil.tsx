@@ -3,6 +3,9 @@ import Swal from "sweetalert2";
 import { FaUserCircle } from "react-icons/fa";
 import LoaderBarbershop from "../utils/LoaderBarberia";
 
+const BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:3000";
+const API_BASE = `${BASE_URL}/api`;
+
 type Usuario = {
   id_usuario: number;
   nombre: string;
@@ -34,7 +37,7 @@ const Perfil = () => {
     const payload = JSON.parse(atob(token.split(".")[1]));
     const id = payload.id;
 
-    fetch(`http://localhost:3000/api/usuarios/${id}`, {
+    fetch(`${API_BASE}/usuarios/${id}`, {
       headers: {
         Authorization: `Bearer ${token}`,
       },
@@ -65,11 +68,11 @@ const Perfil = () => {
 
     try {
       const res = await fetch(
-        `http://localhost:3000/api/usuarios/${usuario.id_usuario}/foto`,
+        `${API_BASE}/usuarios/${usuario.id_usuario}/foto`,
         {
           method: "PUT",
           body: formData,
-        }
+        },
       );
 
       const data = await res.json();
@@ -90,17 +93,14 @@ const Perfil = () => {
     if (!usuario || !token) return;
 
     try {
-      const res = await fetch(
-        `http://localhost:3000/api/usuarios/${usuario.id_usuario}`,
-        {
-          method: "PUT",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-          body: JSON.stringify(editForm),
-        }
-      );
+      const res = await fetch(`${API_BASE}/usuarios/${usuario.id_usuario}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify(editForm),
+      });
 
       const data = await res.json();
       if (!res.ok) throw new Error(data.message);
@@ -122,7 +122,7 @@ const Perfil = () => {
 
     try {
       const res = await fetch(
-        `http://localhost:3000/api/usuarios/${usuario.id_usuario}/password`,
+        `${API_BASE}/usuarios/${usuario.id_usuario}/password`,
         {
           method: "PUT",
           headers: {
@@ -133,7 +133,7 @@ const Perfil = () => {
             actual: passwordForm.actual,
             nueva: passwordForm.nueva,
           }),
-        }
+        },
       );
 
       const data = await res.json();
@@ -146,7 +146,7 @@ const Perfil = () => {
     }
   };
 
-  if (!usuario) return <LoaderBarbershop mensaje="Cargando perfil..." />
+  if (!usuario) return <LoaderBarbershop mensaje="Cargando perfil..." />;
 
   return (
     <div className="min-h-screen flex flex-col md:flex-row bg-gradient-to-br from-yellow-50 to-amber-100 text-gray-800">
@@ -155,7 +155,7 @@ const Perfil = () => {
         <div className="relative w-32 h-32 rounded-full overflow-hidden border-4 border-amber-500 shadow-lg">
           {usuario.foto_perfil ? (
             <img
-              src={`http://localhost:3000/uploads/usuarios/${usuario.foto_perfil}`}
+              src={`${BASE_URL}/uploads/usuarios/${usuario.foto_perfil}`}
               alt="Foto de perfil"
               className="w-full h-full object-cover"
             />

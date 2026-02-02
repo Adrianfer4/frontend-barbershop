@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import ModalCliente from "../modalesCrud/Modal";
 import Swal from "sweetalert2";
 
@@ -51,27 +51,27 @@ export default function Clientes() {
     fetchClientes();
   }, []);
 
-  const buscarClientes = () => {
-    const texto = busqueda.toLowerCase();
+  const buscarClientes = useCallback(() => {
+  const texto = busqueda.toLowerCase();
 
-    const resultado = clientes.filter((c) => {
-      const coincideTexto =
-        c.nombre.toLowerCase().includes(texto) ||
-        c.apellido.toLowerCase().includes(texto) ||
-        c.email.toLowerCase().includes(texto);
+  const resultado = clientes.filter((c) => {
+    const coincideTexto =
+      c.nombre.toLowerCase().includes(texto) ||
+      c.apellido.toLowerCase().includes(texto) ||
+      c.email.toLowerCase().includes(texto);
 
-      const coincideRol = filtroRol === "todos" || c.rol === filtroRol;
+    const coincideRol = filtroRol === "todos" || c.rol === filtroRol;
 
-      return coincideTexto && coincideRol;
-    });
+    return coincideTexto && coincideRol;
+  });
 
-    setClientesFiltrados(resultado);
-  };
+  setClientesFiltrados(resultado);
+}, [busqueda, filtroRol, clientes]); 
 
   useEffect(() => {
     buscarClientes();
     setPaginaActual(1);
-  }, [busqueda, filtroRol]);
+  }, [buscarClientes]);  
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === "Enter") {
@@ -149,7 +149,7 @@ export default function Clientes() {
         className="text-3xl uppercase text-amber-600 text-center font-semi-bold mb-6"
         style={{ fontFamily: "'Russo One', sans-serif" }}
       >
-        Gestión de Clientes
+        Gestión de Usuarios
       </h1>
 
       {/* Buscador y filtro */}
@@ -272,7 +272,7 @@ export default function Clientes() {
         onClick={() => setShowModal(true)}
         className="fixed bottom-8 right-6 bg-amber-600 text-white px-4 py-2 rounded-full shadow-lg hover:bg-amber-700 z-50 transition"
       >
-        + Crear Cliente
+        + Crear Usuario
       </button>
 
       {/* Modal Crear */}
@@ -280,7 +280,7 @@ export default function Clientes() {
         <ModalCliente
           show={showModal}
           onClose={() => setShowModal(false)}
-          title="Nuevo Cliente"
+          title="Nuevo Usuario"
         >
           <form
             onSubmit={handleCrear}
@@ -367,7 +367,7 @@ export default function Clientes() {
         <ModalCliente
           show={true}
           onClose={() => setShowEditModal(false)}
-          title="Editar Cliente"
+          title="Editar Usuario"
         >
           <form
             onSubmit={handleEditar}

@@ -3,11 +3,13 @@ import { useNavigate } from "react-router-dom";
 import { Eye, EyeOff } from "lucide-react";
 import Swal from "sweetalert2";
 
+const API_BASE = import.meta.env.VITE_API_URL || "http://localhost:3000/api";
+
 export default function LoginForm() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [errors, setErrors] = useState<{ email?: string; password?: string }>(
-    {}
+    {},
   );
   const navigate = useNavigate();
 
@@ -39,7 +41,7 @@ export default function LoginForm() {
     if (!validate()) return;
 
     try {
-      const response = await fetch("http://localhost:3000/api/auth/login", {
+      const response = await fetch(`${API_BASE}/auth/login`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

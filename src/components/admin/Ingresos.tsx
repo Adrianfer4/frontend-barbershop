@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import Swal from "sweetalert2";
 import GraficosIngresos from "../graficosIngresos/GraficosIngresos";
 import IngresoModal from "../modalesCrud/IngresoModal";
@@ -79,15 +79,7 @@ export default function Ingresos() {
     fetchBarberos();
     fetchServicios();
     cargarTotalesAgrupados(filtro);
-  }, []);
-
-  useEffect(() => {
-    if (desde && hasta && new Date(hasta) < new Date(desde)) {
-      Swal.fire("Error", "'Hasta' no puede ser antes que 'Desde'", "error");
-      return;
-    }
-    fetchIngresos();
-  }, [desde, hasta, barberoSeleccionado]);
+  }, [filtro]); 
 
   useEffect(() => {
     cargarTotalesAgrupados(filtro, selectedYear, selectedMonth, selectedDay);
@@ -108,7 +100,7 @@ export default function Ingresos() {
     setServicios(data);
   };
 
-  const fetchIngresos = async () => {
+  const fetchIngresos = useCallback(async () => {
     const params = new URLSearchParams();
     if (desde) params.append("desde", desde);
     if (hasta) params.append("hasta", hasta);
@@ -121,7 +113,15 @@ export default function Ingresos() {
     const data: Ingreso[] = await res.json();
     setIngresos(data);
     setPaginaActual(1);
-  };
+  }, [desde, hasta, barberoSeleccionado]);
+
+  useEffect(() => {
+  if (desde && hasta && new Date(hasta) < new Date(desde)) {
+    Swal.fire("Error", "'Hasta' no puede ser antes que 'Desde'", "error");
+    return;
+  }
+  fetchIngresos(); 
+}, [desde, hasta, barberoSeleccionado, fetchIngresos]);
 
   const cargarTotalesAgrupados = async (
     f: "dia" | "semana" | "mes" | "año",

@@ -1,7 +1,10 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import Swal from "sweetalert2";
 import ModalCitaAdmin from "../modalesCrud/ModalCitaAdmin";
 import ExportarCitasModal from "../modalesCrud/ExportarCitasModal";
+
+const BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:3000";
+const API_BASE = `${BASE_URL}/api`;
 
 type Cita = {
   id_cita: number;
@@ -30,36 +33,33 @@ export default function Citas() {
   const totalPaginas = Math.ceil(citas.length / citasPorPagina);
   const citasActuales = citas.slice(
     (paginaActual - 1) * citasPorPagina,
-    paginaActual * citasPorPagina
+    paginaActual * citasPorPagina,
   );
 
-  const fetchCitas = async () => {
+  const fetchCitas = useCallback(async () => {
     try {
       const params = new URLSearchParams();
       if (estadoFiltro) params.append("estado", estadoFiltro);
       if (fechaFiltro) params.append("fecha", fechaFiltro);
 
       const token = localStorage.getItem("token");
-      const res = await fetch(
-        `http://localhost:3000/api/citas/admin?${params}`,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
+      const res = await fetch(`${API_BASE}/citas/admin?${params}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
 
       const data = await res.json();
       setCitas(data);
-      setPaginaActual(1); // Reset paginación al cambiar filtro
+      setPaginaActual(1);
     } catch {
       Swal.fire("Error", "No se pudieron cargar las citas", "error");
     }
-  };
+  }, [estadoFiltro, fechaFiltro]);
 
   const cambiarEstado = async (id: number, nuevoEstado: Cita["estado"]) => {
     try {
-      await fetch(`http://localhost:3000/api/citas/${id}/estado`, {
+      await fetch(`${API_BASE}/citas/${id}/estado`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
@@ -86,7 +86,7 @@ export default function Citas() {
 
     if (confirm.isConfirmed) {
       try {
-        await fetch(`http://localhost:3000/api/citas/${id}`, {
+        await fetch(`${API_BASE}/citas/${id}`, {
           method: "DELETE",
           headers: {
             Authorization: `Bearer ${localStorage.getItem("token")}`,
@@ -107,7 +107,7 @@ export default function Citas() {
 
   useEffect(() => {
     fetchCitas();
-  }, [estadoFiltro, fechaFiltro]);
+  }, [fetchCitas]);
 
   const formatearFecha = (fechaIso: string) => {
     const fecha = new Date(fechaIso);
@@ -214,7 +214,7 @@ export default function Citas() {
                   <td className="border p-2">{cita.hora}</td>
                   <td
                     className={`border p-2 capitalize ${colorEstado(
-                      cita.estado
+                      cita.estado,
                     )}`}
                   >
                     {cita.estado}
@@ -225,11 +225,11 @@ export default function Citas() {
                       onChange={(e) =>
                         cambiarEstado(
                           cita.id_cita,
-                          e.target.value as Cita["estado"]
+                          e.target.value as Cita["estado"],
                         )
                       }
                       className={`border rounded px-2 py-1 text-sm ${colorEstado(
-                        cita.estado
+                        cita.estado,
                       )}`}
                     >
                       <option value="pendiente">Pendiente</option>
@@ -293,12 +293,12 @@ export default function Citas() {
         </button>
       </div>
 
-        <button
-          onClick={() => setMostrarModalCrear(true)}
-          className="fixed bottom-8 right-6 bg-amber-600 text-white px-4 py-2 rounded-full shadow-lg hover:bg-amber-700 z-50 transition"
-        >
-          + Crear Cita
-        </button>
+      <button
+        onClick={() => setMostrarModalCrear(true)}
+        className="fixed bottom-8 right-6 bg-amber-600 text-white px-4 py-2 rounded-full shadow-lg hover:bg-amber-700 z-50 transition"
+      >
+        + Crear Cita
+      </button>
 
       {/* Modales */}
       {mostrarModalCrear && (

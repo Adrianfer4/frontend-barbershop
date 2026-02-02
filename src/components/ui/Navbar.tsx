@@ -7,6 +7,9 @@ type Usuario = {
   foto_perfil?: string;
 };
 
+const BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:3000";
+const API_BASE = `${BASE_URL}/api`;
+
 const Navbar = () => {
   const [logueado, setLogueado] = useState(false);
   const [menuAbierto, setMenuAbierto] = useState(false);
@@ -20,13 +23,18 @@ const Navbar = () => {
     const payload = JSON.parse(atob(token.split(".")[1]));
     const id = payload.id;
 
-    fetch(`http://localhost:3000/api/usuarios/${id}`, {
+    fetch(`${API_BASE}/usuarios/${id}`, {
       headers: {
         Authorization: `Bearer ${token}`,
       },
     })
       .then((res) => res.json())
-      .then((data) => setUsuario({ id_usuario: data.id_usuario, foto_perfil: data.foto_perfil }))
+      .then((data) =>
+        setUsuario({
+          id_usuario: data.id_usuario,
+          foto_perfil: data.foto_perfil,
+        }),
+      )
       .catch(() => setUsuario(null));
   }, []);
 
@@ -49,12 +57,14 @@ const Navbar = () => {
   );
 
   const PerfilIcon = () => (
-    <a href="/perfil" 
-    title="Mi perfil"
-    className="block w-12 h-12 rounded-full overflow-hidden border border-white">
+    <a
+      href="/perfil"
+      title="Mi perfil"
+      className="block w-12 h-12 rounded-full overflow-hidden border border-white"
+    >
       {usuario?.foto_perfil ? (
         <img
-          src={`http://localhost:3000/uploads/usuarios/${usuario.foto_perfil}`}
+          src={`${BASE_URL}/uploads/usuarios/${usuario.foto_perfil}`}
           alt="Perfil"
           className="w-full h-full object-cover"
         />
@@ -71,7 +81,11 @@ const Navbar = () => {
       <div className="flex justify-between items-center px-6 py-3 lg:px-12">
         {/* Logo */}
         <div className="flex items-center">
-          <img src="/logoBarbershop.png" alt="Logo" className="h-18 md:h-18 object-contain" />
+          <img
+            src="/logoBarbershop.png"
+            alt="Logo"
+            className="h-18 md:h-18 object-contain"
+          />
         </div>
 
         {/* Hamburguesa (móviles) */}
@@ -94,7 +108,6 @@ const Navbar = () => {
         </div>
 
         <div className="hidden lg:flex items-center gap-4">
-          
           {logueado ? (
             <button
               onClick={handleLogout}

@@ -1,4 +1,3 @@
-// GraficosDashboard.tsx
 import { Line, Pie } from "react-chartjs-2";
 import {
   Chart as ChartJS,
@@ -12,7 +11,10 @@ import {
   ArcElement,
   Filler,
 } from "chart.js";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
+
+const BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:3000";
+const API_BASE = `${BASE_URL}/api`;
 
 ChartJS.register(
   LineElement,
@@ -23,7 +25,7 @@ ChartJS.register(
   Tooltip,
   Legend,
   ArcElement,
-  Filler
+  Filler,
 );
 
 type IngresoPorBarbero = {
@@ -43,17 +45,14 @@ export default function GraficosDashboard() {
 
   const token = localStorage.getItem("token");
 
-  const cargarDatos = async () => {
+  const cargarDatos = useCallback(async () => {
     try {
       // Pie (Ingresos por barberos)
-      const resPie = await fetch(
-        "http://localhost:3000/api/ingresos/por-barbero",
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
+      const resPie = await fetch(`${API_BASE}/ingresos/por-barbero`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
 
       if (!resPie.ok) {
         console.error(`Error ${resPie.status}:`, await resPie.text());
@@ -73,7 +72,7 @@ export default function GraficosDashboard() {
       setDatosPie({ nombres, valores });
 
       //Linea (Citas por dia)
-      const resLine = await fetch("http://localhost:3000/api/citas/por-dia", {
+      const resLine = await fetch(`${API_BASE}/citas/por-dia`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -84,11 +83,11 @@ export default function GraficosDashboard() {
     } catch (err) {
       console.error("Error al cargar gráficos", err);
     }
-  };
+  }, [token]);
 
   useEffect(() => {
     cargarDatos();
-  }, []);
+  }, [cargarDatos]);
 
   const dataPastel = {
     labels: datosPie.nombres,

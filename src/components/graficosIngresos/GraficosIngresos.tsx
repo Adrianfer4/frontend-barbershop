@@ -10,7 +10,7 @@ import {
   Tooltip,
   Legend,
 } from "chart.js";
-import { useMemo } from "react";
+import { useMemo, useCallback } from "react";
 
 ChartJS.register(
   CategoryScale,
@@ -35,7 +35,7 @@ type Props = {
 };
 
 export default function GraficosIngresos({ totales, filtro }: Props) {
-  const formatearPeriodo = (periodo: string | number) => {
+  const formatearPeriodo = useCallback((periodo: string | number) => {
     if (filtro === "mes") {
       const meses = [
         "Enero",
@@ -70,11 +70,11 @@ export default function GraficosIngresos({ totales, filtro }: Props) {
       }
     }
     return String(periodo);
-  };
+  }, [filtro]);
 
   const labels = useMemo(
     () => totales.map((t) => formatearPeriodo(t.periodo)),
-    [totales, filtro]
+    [totales, formatearPeriodo] 
   );
 
   const data = {

@@ -1,4 +1,3 @@
-// src/pages/dashboard/Servicios.tsx
 import { useEffect, useState } from "react";
 import ModalServicio from "../modalesCrud/Modal";
 import Swal from "sweetalert2";

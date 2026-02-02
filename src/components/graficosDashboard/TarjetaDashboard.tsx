@@ -1,6 +1,14 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import CardEstadistica from "./CardEstadistica";
-import { FaUsers, FaCalendarAlt, FaDollarSign, FaHandScissors } from "react-icons/fa";
+import {
+  FaUsers,
+  FaCalendarAlt,
+  FaDollarSign,
+  FaHandScissors,
+} from "react-icons/fa";
+
+const BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:3000";
+const API_BASE = `${BASE_URL}/api`;
 
 export default function TarjetasDashboard() {
   const [clientes, setClientes] = useState(0);
@@ -10,18 +18,23 @@ export default function TarjetasDashboard() {
 
   const token = localStorage.getItem("token");
 
-  useEffect(() => {
-    fetchTotales();
-  }, []);
-
-  const fetchTotales = async () => {
+  const fetchTotales = useCallback(async () => {
     try {
-      const [resClientes, resServicios, resCitas, resIngresos] = await Promise.all([
-        fetch("http://localhost:3000/api/usuarios/contar", { headers: { Authorization: `Bearer ${token}` } }),
-        fetch("http://localhost:3000/api/servicios/contar", { headers: { Authorization: `Bearer ${token}` } }),
-        fetch("http://localhost:3000/api/citas/contar", { headers: { Authorization: `Bearer ${token}` } }),
-        fetch("http://localhost:3000/api/ingresos/total", { headers: { Authorization: `Bearer ${token}` } }),
-      ]);
+      const [resClientes, resServicios, resCitas, resIngresos] =
+        await Promise.all([
+          fetch(`${API_BASE}/usuarios/contar`, {
+            headers: { Authorization: `Bearer ${token}` },
+          }),
+          fetch(`${API_BASE}/servicios/contar`, {
+            headers: { Authorization: `Bearer ${token}` },
+          }),
+          fetch(`${API_BASE}/citas/contar`, {
+            headers: { Authorization: `Bearer ${token}` },
+          }),
+          fetch(`${API_BASE}/ingresos/total`, {
+            headers: { Authorization: `Bearer ${token}` },
+          }),
+        ]);
 
       const totalClientes = await resClientes.json();
       const totalServicios = await resServicios.json();
@@ -35,7 +48,11 @@ export default function TarjetasDashboard() {
     } catch (error) {
       console.error("Error al cargar totales:", error);
     }
-  };
+  }, [token]);
+
+  useEffect(() => {
+    fetchTotales();
+  }, [fetchTotales]);
 
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 w-full">

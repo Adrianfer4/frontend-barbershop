@@ -2,6 +2,9 @@ import { useEffect, useState } from "react";
 import { obtenerFechaHoy, isoToDateOnly } from "../../utils/formatoDeFechas";
 import Swal from "sweetalert2";
 
+const BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:3000";
+const API_BASE = `${BASE_URL}/api`;
+
 type Barbero = {
   id_usuario: number;
   nombre: string;
@@ -41,14 +44,11 @@ const ExportarCitasModal = ({
     const obtenerBarberos = async () => {
       try {
         const token = localStorage.getItem("token");
-        const res = await fetch(
-          "http://localhost:3000/api/usuarios?rol=barbershop",
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        );
+        const res = await fetch(`${API_BASE}/usuarios?rol=barbershop`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
         const data = await res.json();
         setBarberos(data);
       } catch {
@@ -77,7 +77,7 @@ const ExportarCitasModal = ({
 
     if (barberoId !== "todos") {
       citasFiltradas = citasFiltradas.filter(
-        (cita) => cita.id_barbero === barberoId
+        (cita) => cita.id_barbero === barberoId,
       );
     }
 
@@ -149,7 +149,7 @@ const ExportarCitasModal = ({
       `;
 
       const citasOrdenadas = [...citasPorBarbero[barbero]].sort((a, b) =>
-        a.hora.localeCompare(b.hora)
+        a.hora.localeCompare(b.hora),
       );
 
       citasOrdenadas.forEach((cita) => {
@@ -159,7 +159,7 @@ const ExportarCitasModal = ({
             <td class="p-2 border">${cita.cliente_nombre}</td>
             <td class="p-2 border">${cita.nombre_servicio}</td>
             <td class="p-2 border text-center capitalize ${colorEstado(
-              cita.estado
+              cita.estado,
             ).replace("border-", "")}">${cita.estado}</td>
           </tr>
         `;
@@ -200,8 +200,10 @@ const ExportarCitasModal = ({
           ×
         </button>
 
-        <h1 className="text-3xl uppercase text-amber-600 text-center font-semi-bold mb-6"
-        style={{ fontFamily: "'Russo One', sans-serif" }}>
+        <h1
+          className="text-3xl uppercase text-amber-600 text-center font-semi-bold mb-6"
+          style={{ fontFamily: "'Russo One', sans-serif" }}
+        >
           Exportar Citas
         </h1>
 
@@ -249,7 +251,7 @@ const ExportarCitasModal = ({
                 barberoSeleccionado === "todos"
                   ? "todos"
                   : parseInt(barberoSeleccionado),
-                fechaSeleccionada
+                fechaSeleccionada,
               )
             }
             className="bg-gradient-to-r from-yellow-500 to-amber-600 hover:opacity-80 text-white font-bold px-4 py-2 rounded-lg transition"

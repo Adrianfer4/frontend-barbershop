@@ -27,7 +27,7 @@ export function Sidebar({
 
   const mainLinks = [
     { id: "dashboard", label: "Dashboard", icon: <FaTachometerAlt /> },
-    { id: "clientes", label: "Clientes", icon: <FaUsers /> },
+    { id: "usuarios", label: "Usuarios", icon: <FaUsers /> },
     { id: "servicios", label: "Servicios", icon: <FaRegHandScissors /> },
     { id: "citas", label: "Citas", icon: <FaCalendarAlt /> },
     { id: "ingresos", label: "Ingresos", icon: <FaMoneyBill /> },
@@ -77,7 +77,6 @@ export function Sidebar({
             ))}
           </nav>
 
-          {/* Separador */}
           <hr className="my-4 border-white/30" />
 
           {/* Enlaces adicionales */}
