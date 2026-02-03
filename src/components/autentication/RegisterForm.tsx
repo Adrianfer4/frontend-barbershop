@@ -99,7 +99,7 @@ export default function RegisterForm() {
   return (
     <form
       onSubmit={handleSubmit}
-      className="bg-white px-8 py-4 rounded-2xl shadow-xl w-[350px] h-[500px]"
+      className="bg-white px-8 py-4 rounded-2xl shadow-xl w-full md:w-[350px] h-[500px]"
     >
       <h2 className="text-2xl font-bold mb-2 text-center">Registrarse</h2>
 

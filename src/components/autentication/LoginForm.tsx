@@ -94,7 +94,7 @@ export default function LoginForm() {
   return (
     <form
       onSubmit={handleSubmit}
-      className="bg-white p-8 rounded-2xl shadow-xl w-[300px]"
+      className="bg-white p-8 rounded-2xl shadow-xl w-full md:w-[300px]"
     >
       <h2 className="text-2xl font-bold mb-6 text-center">Iniciar Sesión</h2>
 
