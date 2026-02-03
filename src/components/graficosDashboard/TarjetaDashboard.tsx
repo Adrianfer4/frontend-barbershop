@@ -28,9 +28,7 @@ export default function TarjetasDashboard() {
           fetch(`${API_BASE}/servicios/contar`, {
             headers: { Authorization: `Bearer ${token}` },
           }),
-          fetch(`${API_BASE}/citas/contar`, {
-            headers: { Authorization: `Bearer ${token}` },
-          }),
+          fetch(`${API_BASE}/citas/contar`),
           fetch(`${API_BASE}/ingresos/total`, {
             headers: { Authorization: `Bearer ${token}` },
           }),
