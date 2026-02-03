@@ -3,7 +3,8 @@ import ServicioCard from "./ServicioCard";
 import Swal from "sweetalert2";
 import LoaderBarbershop from "../../utils/LoaderBarberia";
 
-const API_BASE = 'https://backend-barbershop-production-2f88.up.railway.app/api';
+const API_BASE =
+  "https://backend-barbershop-production-2f88.up.railway.app/api";
 
 type Servicio = {
   id_servicio: number;
@@ -27,7 +28,7 @@ const ServicioSection = () => {
           setLoading(false);
         }, 1000);
       })
-      
+
       .catch((err) => {
         console.error(err);
         setLoading(false);
@@ -35,7 +36,7 @@ const ServicioSection = () => {
       });
   }, []);
 
-  if (loading) return <LoaderBarbershop mensaje="Cargando servicios..." />
+  if (loading) return <LoaderBarbershop mensaje="Cargando servicios..." />;
 
   return (
     <section className="p-6">

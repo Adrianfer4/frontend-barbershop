@@ -2,7 +2,8 @@ import { useEffect, useState } from "react";
 import ModalServicio from "../modalesCrud/Modal";
 import Swal from "sweetalert2";
 
-const API_BASE = 'https://backend-barbershop-production-2f88.up.railway.app/api';
+const API_BASE =
+  "https://backend-barbershop-production-2f88.up.railway.app/api";
 
 interface Servicio {
   id_servicio: number;
@@ -79,7 +80,7 @@ export default function Servicios() {
       formData.append("precio", precio.toString());
       formData.append(
         "duracion",
-        convertirMinutosAFormatoHora(parseInt(duracion))
+        convertirMinutosAFormatoHora(parseInt(duracion)),
       );
 
       if (imagen) formData.append("imagen", imagen);
@@ -126,7 +127,7 @@ export default function Servicios() {
       formData.append("precio", servicioEditado.precio.toString());
       formData.append(
         "duracion",
-        convertirMinutosAFormatoHora(parseInt(servicioEditado.duracion))
+        convertirMinutosAFormatoHora(parseInt(servicioEditado.duracion)),
       );
       if (servicioEditado.imagen instanceof File) {
         formData.append("imagen", servicioEditado.imagen);
@@ -137,7 +138,7 @@ export default function Servicios() {
         {
           method: "PUT",
           body: formData,
-        }
+        },
       );
 
       if (!res.ok) throw new Error("Error al editar servicio");
@@ -263,11 +264,10 @@ export default function Servicios() {
             onClose={() => setShowModal(false)}
             title="Nuevo Servicio"
           >
-            <form
-              onSubmit={handleCrearServicio}
-              className="space-y-4"
-            >
-              <label className="block text-sm font-bold mb-1 text-gray-900">Nombre</label>
+            <form onSubmit={handleCrearServicio} className="space-y-4">
+              <label className="block text-sm font-bold mb-1 text-gray-900">
+                Nombre
+              </label>
               <input
                 type="text"
                 placeholder="Nombre del servicio"
@@ -276,7 +276,9 @@ export default function Servicios() {
                 required
                 className="w-full p-2 rounded-lg bg-gray-300 focus:outline-none focus:ring-2 focus:ring-yellow-500"
               />
-              <label className="block text-sm font-bold mb-1 text-gray-900">Descripcion</label>
+              <label className="block text-sm font-bold mb-1 text-gray-900">
+                Descripcion
+              </label>
               <input
                 type="text"
                 placeholder="Descripción del servicio"
@@ -285,7 +287,9 @@ export default function Servicios() {
                 required
                 className="w-full p-2 rounded-lg bg-gray-300 focus:outline-none focus:ring-2 focus:ring-yellow-500"
               />
-              <label className="block text-sm font-bold mb-1 text-gray-900">Precio</label>
+              <label className="block text-sm font-bold mb-1 text-gray-900">
+                Precio
+              </label>
               <div className="relative">
                 <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500">
                   $
@@ -301,7 +305,9 @@ export default function Servicios() {
                   className="w-full p-2 rounded pl-7 rounded-lg bg-gray-300 focus:outline-none focus:ring-2 focus:ring-yellow-500"
                 />
               </div>
-              <label className="block text-sm font-bold mb-1 text-gray-900">Duracion</label>
+              <label className="block text-sm font-bold mb-1 text-gray-900">
+                Duracion
+              </label>
               <input
                 type="number"
                 placeholder="Duración en minutos"
@@ -373,11 +379,10 @@ export default function Servicios() {
             }}
             title="Editar Servicio"
           >
-            <form
-              onSubmit={handleEditarServicio}
-              className="space-y-4"
-            >
-              <label className="block text-sm font-bold mb-1 text-gray-900">Nombre</label>
+            <form onSubmit={handleEditarServicio} className="space-y-4">
+              <label className="block text-sm font-bold mb-1 text-gray-900">
+                Nombre
+              </label>
               <input
                 type="text"
                 placeholder="Nombre del servicio"
@@ -391,7 +396,9 @@ export default function Servicios() {
                 required
                 className="w-full p-2 rounded-lg bg-gray-300 focus:outline-none focus:ring-2 focus:ring-yellow-500"
               />
-              <label className="block text-sm font-bold mb-1 text-gray-900">Descripcion</label>
+              <label className="block text-sm font-bold mb-1 text-gray-900">
+                Descripcion
+              </label>
               <input
                 type="text"
                 placeholder="(descripción)"
@@ -405,7 +412,9 @@ export default function Servicios() {
                 required
                 className="w-full p-2 rounded-lg bg-gray-300 focus:outline-none focus:ring-2 focus:ring-yellow-500"
               />
-              <label className="block text-sm font-bold mb-1 text-gray-900">Precio</label>
+              <label className="block text-sm font-bold mb-1 text-gray-900">
+                Precio
+              </label>
               <div className="relative">
                 <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500">
                   $
@@ -423,7 +432,9 @@ export default function Servicios() {
                   className="w-full p-2 rounded pl-7 rounded-lg bg-gray-300 focus:outline-none focus:ring-2 focus:ring-yellow-500"
                 />
               </div>
-              <label className="block text-sm font-bold mb-1 text-gray-900">Duracion</label>
+              <label className="block text-sm font-bold mb-1 text-gray-900">
+                Duracion
+              </label>
               <input
                 type="number"
                 placeholder="Duración en minutos"

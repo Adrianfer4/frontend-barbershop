@@ -13,7 +13,7 @@ export default function ImageCard({
     position === "right" ? "rounded-r-2xl" : "rounded-l-2xl";
 
   return (
-    <div className="hidden lg:flex items-center justify-center">
+    <div className="hidden md:flex items-center justify-center">
       <img
         src={imageUrl}
         alt="Imagen de la barbería"

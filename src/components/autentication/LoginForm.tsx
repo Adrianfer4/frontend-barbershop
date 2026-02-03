@@ -3,7 +3,8 @@ import { useNavigate } from "react-router-dom";
 import { Eye, EyeOff } from "lucide-react";
 import Swal from "sweetalert2";
 
-const API_BASE = 'https://backend-barbershop-production-2f88.up.railway.app/api';
+const API_BASE =
+  "https://backend-barbershop-production-2f88.up.railway.app/api";
 
 export default function LoginForm() {
   const [email, setEmail] = useState("");

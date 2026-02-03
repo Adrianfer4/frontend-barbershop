@@ -2,7 +2,8 @@ import { useEffect, useState } from "react";
 import { format, addDays } from "date-fns";
 import Swal from "sweetalert2";
 
-const API_BASE = 'https://backend-barbershop-production-2f88.up.railway.app/api';
+const API_BASE =
+  "https://backend-barbershop-production-2f88.up.railway.app/api";
 
 type ModalCitaAdminProps = {
   cita?: {
@@ -27,16 +28,24 @@ type Servicio = {
 };
 
 const isoToDateInput = (isoString: string) => {
-  return isoString.split('T')[0];
+  return isoString.split("T")[0];
 };
 
-const ModalCitaAdmin = ({ cita, setMostrarModal, onGuardado }: ModalCitaAdminProps) => {
+const ModalCitaAdmin = ({
+  cita,
+  setMostrarModal,
+  onGuardado,
+}: ModalCitaAdminProps) => {
   const [barberos, setBarberos] = useState<Barbero[]>([]);
   const [servicios, setServicios] = useState<Servicio[]>([]);
-  const [barbero, setBarbero] = useState<string>(cita?.id_barbero?.toString() ?? "");
-  const [servicio, setServicio] = useState<string>(cita?.servicio?.toString() ?? "");
+  const [barbero, setBarbero] = useState<string>(
+    cita?.id_barbero?.toString() ?? "",
+  );
+  const [servicio, setServicio] = useState<string>(
+    cita?.servicio?.toString() ?? "",
+  );
   const [fecha, setFecha] = useState<string>(
-    cita?.fecha ? isoToDateInput(cita.fecha) : ""
+    cita?.fecha ? isoToDateInput(cita.fecha) : "",
   );
   const [horarios, setHorarios] = useState<string[]>([]);
   const [hora, setHora] = useState<string>(cita?.hora ?? "");
@@ -56,7 +65,7 @@ const ModalCitaAdmin = ({ cita, setMostrarModal, onGuardado }: ModalCitaAdminPro
   useEffect(() => {
     if (fecha && servicio && barbero) {
       fetch(
-        `${API_BASE}/citas/horarios?fecha=${fecha}&servicio=${servicio}&barbero=${barbero}`
+        `${API_BASE}/citas/horarios?fecha=${fecha}&servicio=${servicio}&barbero=${barbero}`,
       )
         .then((res) => res.json())
         .then((data) => setHorarios(Array.isArray(data) ? data : []))
@@ -102,9 +111,11 @@ const ModalCitaAdmin = ({ cita, setMostrarModal, onGuardado }: ModalCitaAdminPro
 
     if (res.ok) {
       Swal.fire(
-        cita ? "Cita actualizada correctamente" : "Cita registrada exitosamente",
+        cita
+          ? "Cita actualizada correctamente"
+          : "Cita registrada exitosamente",
         "",
-        "success"
+        "success",
       );
       setMostrarModal(false);
       onGuardado();
@@ -123,15 +134,19 @@ const ModalCitaAdmin = ({ cita, setMostrarModal, onGuardado }: ModalCitaAdminPro
           ×
         </button>
 
-        <h1 className="text-3xl uppercase text-amber-600 text-center font-semi-bold mb-6"
-        style={{ fontFamily: "'Russo One', sans-serif" }}>
+        <h1
+          className="text-3xl uppercase text-amber-600 text-center font-semi-bold mb-6"
+          style={{ fontFamily: "'Russo One', sans-serif" }}
+        >
           {cita ? "Editar Cita" : "Nueva Cita"}
         </h1>
 
         <div className="space-y-4">
           {/* Barbero */}
           <div>
-            <label className="block text-sm font-bold mb-1 text-gray-900">Barbero</label>
+            <label className="block text-sm font-bold mb-1 text-gray-900">
+              Barbero
+            </label>
             <select
               className="w-full p-2 rounded-lg bg-gray-300 focus:outline-none focus:ring-2 focus:ring-yellow-500"
               value={barbero}
@@ -148,7 +163,9 @@ const ModalCitaAdmin = ({ cita, setMostrarModal, onGuardado }: ModalCitaAdminPro
 
           {/* Servicio */}
           <div>
-            <label className="block text-sm font-bold mb-1 text-gray-900">Servicio</label>
+            <label className="block text-sm font-bold mb-1 text-gray-900">
+              Servicio
+            </label>
             <select
               className="w-full p-2 rounded-lg bg-gray-300 focus:outline-none focus:ring-2 focus:ring-yellow-500"
               value={servicio}
@@ -165,7 +182,9 @@ const ModalCitaAdmin = ({ cita, setMostrarModal, onGuardado }: ModalCitaAdminPro
 
           {/* Fecha */}
           <div>
-            <label className="block text-sm font-bold mb-1 text-gray-900">Fecha</label>
+            <label className="block text-sm font-bold mb-1 text-gray-900">
+              Fecha
+            </label>
             <input
               type="date"
               className="w-full p-2 rounded-lg bg-gray-300 focus:outline-none focus:ring-2 focus:ring-yellow-500"
@@ -178,7 +197,9 @@ const ModalCitaAdmin = ({ cita, setMostrarModal, onGuardado }: ModalCitaAdminPro
 
           {/* Horario */}
           <div>
-            <label className="block text-sm font-bold mb-1 text-gray-900">Horario</label>
+            <label className="block text-sm font-bold mb-1 text-gray-900">
+              Horario
+            </label>
             <select
               className="w-full p-2 rounded-lg bg-gray-300 focus:outline-none focus:ring-2 focus:ring-yellow-500"
               value={hora}

@@ -4,7 +4,7 @@ import Swal from "sweetalert2";
 import { jwtDecode } from "jwt-decode";
 import { useNavigate } from "react-router-dom";
 
-const BASE_URL = 'https://backend-barbershop-production-2f88.up.railway.app';
+const BASE_URL = "https://backend-barbershop-production-2f88.up.railway.app";
 const API_BASE = `${BASE_URL}/api`;
 
 type ModalProps = {
@@ -44,7 +44,7 @@ const ModalAgendar = ({ id_servicio, setMostrarModal }: ModalProps) => {
   useEffect(() => {
     if (fecha && id_servicio && barbero) {
       fetch(
-        `${API_BASE}/citas/horarios?fecha=${fecha}&servicio=${id_servicio}&barbero=${barbero}`
+        `${API_BASE}/citas/horarios?fecha=${fecha}&servicio=${id_servicio}&barbero=${barbero}`,
       )
         .then((res) => res.json())
         .then((data) => {

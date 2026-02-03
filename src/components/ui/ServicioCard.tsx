@@ -1,7 +1,7 @@
 import { useState } from "react";
 import ModalAgendar from "../modalesCrud/ModalAgendar";
 
-const BASE_URL = 'https://backend-barbershop-production-2f88.up.railway.app';
+const BASE_URL = "https://backend-barbershop-production-2f88.up.railway.app";
 
 type ServicioCardProps = {
   id_servicio: number;

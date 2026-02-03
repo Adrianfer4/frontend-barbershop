@@ -7,7 +7,7 @@ import {
   FaHandScissors,
 } from "react-icons/fa";
 
-const BASE_URL = 'https://backend-barbershop-production-2f88.up.railway.app';
+const BASE_URL = "https://backend-barbershop-production-2f88.up.railway.app";
 const API_BASE = `${BASE_URL}/api`;
 
 export default function TarjetasDashboard() {

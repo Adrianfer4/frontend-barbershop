@@ -3,7 +3,8 @@ import Swal from "sweetalert2";
 import GraficosIngresos from "../graficosIngresos/GraficosIngresos";
 import IngresoModal from "../modalesCrud/IngresoModal";
 
-const API_BASE = 'https://backend-barbershop-production-2f88.up.railway.app/api';
+const API_BASE =
+  "https://backend-barbershop-production-2f88.up.railway.app/api";
 
 type Ingreso = {
   id_ingreso: number;
@@ -81,7 +82,7 @@ export default function Ingresos() {
     fetchBarberos();
     fetchServicios();
     cargarTotalesAgrupados(filtro);
-  }, [filtro]); 
+  }, [filtro]);
 
   useEffect(() => {
     cargarTotalesAgrupados(filtro, selectedYear, selectedMonth, selectedDay);
@@ -118,18 +119,18 @@ export default function Ingresos() {
   }, [desde, hasta, barberoSeleccionado]);
 
   useEffect(() => {
-  if (desde && hasta && new Date(hasta) < new Date(desde)) {
-    Swal.fire("Error", "'Hasta' no puede ser antes que 'Desde'", "error");
-    return;
-  }
-  fetchIngresos(); 
-}, [desde, hasta, barberoSeleccionado, fetchIngresos]);
+    if (desde && hasta && new Date(hasta) < new Date(desde)) {
+      Swal.fire("Error", "'Hasta' no puede ser antes que 'Desde'", "error");
+      return;
+    }
+    fetchIngresos();
+  }, [desde, hasta, barberoSeleccionado, fetchIngresos]);
 
   const cargarTotalesAgrupados = async (
     f: "dia" | "semana" | "mes" | "año",
     año?: string,
     mes?: string,
-    dia?: string
+    dia?: string,
   ) => {
     const params = new URLSearchParams({ filtro: f });
     if (año) params.append("año", año);
@@ -137,10 +138,9 @@ export default function Ingresos() {
     if (dia) params.append("dia", dia);
 
     const token = localStorage.getItem("token");
-    const res = await fetch(
-      `${API_BASE}/ingresos/agrupado?${params}`,
-      { headers: { Authorization: `Bearer ${token}` } }
-    );
+    const res = await fetch(`${API_BASE}/ingresos/agrupado?${params}`, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
     const data: IngresoAgrupado[] = await res.json();
     setTotales(data);
   };
@@ -319,13 +319,13 @@ export default function Ingresos() {
       </div>
 
       <div className="text-left">
-          <button
-            onClick={abrirCrear}
-            className="fixed bottom-8 right-6 bg-amber-600 text-white px-4 py-2 rounded-full shadow-lg hover:bg-amber-700 z-50 transition"
-          >
-            + Crear Ingreso
-          </button>
-        </div>
+        <button
+          onClick={abrirCrear}
+          className="fixed bottom-8 right-6 bg-amber-600 text-white px-4 py-2 rounded-full shadow-lg hover:bg-amber-700 z-50 transition"
+        >
+          + Crear Ingreso
+        </button>
+      </div>
 
       <div className="mt-6">
         <h2 className="text-xl font-bold mb-2">Totales por {filtro}</h2>

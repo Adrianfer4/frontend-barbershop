@@ -13,7 +13,7 @@ import {
 } from "chart.js";
 import { useEffect, useState, useCallback } from "react";
 
-const BASE_URL = 'https://backend-barbershop-production-2f88.up.railway.app';
+const BASE_URL = "https://backend-barbershop-production-2f88.up.railway.app";
 const API_BASE = `${BASE_URL}/api`;
 
 ChartJS.register(

@@ -41,7 +41,9 @@ export default function Clientes() {
   const totalPaginas = Math.ceil(clientesFiltrados.length / elementosPorPagina);
 
   const fetchClientes = async () => {
-    const res = await fetch("https://backend-barbershop-production-2f88.up.railway.app/api/usuarios");
+    const res = await fetch(
+      "https://backend-barbershop-production-2f88.up.railway.app/api/usuarios",
+    );
     const data = await res.json();
     setClientes(data);
     setClientesFiltrados(data);
@@ -52,26 +54,26 @@ export default function Clientes() {
   }, []);
 
   const buscarClientes = useCallback(() => {
-  const texto = busqueda.toLowerCase();
+    const texto = busqueda.toLowerCase();
 
-  const resultado = clientes.filter((c) => {
-    const coincideTexto =
-      c.nombre.toLowerCase().includes(texto) ||
-      c.apellido.toLowerCase().includes(texto) ||
-      c.email.toLowerCase().includes(texto);
+    const resultado = clientes.filter((c) => {
+      const coincideTexto =
+        c.nombre.toLowerCase().includes(texto) ||
+        c.apellido.toLowerCase().includes(texto) ||
+        c.email.toLowerCase().includes(texto);
 
-    const coincideRol = filtroRol === "todos" || c.rol === filtroRol;
+      const coincideRol = filtroRol === "todos" || c.rol === filtroRol;
 
-    return coincideTexto && coincideRol;
-  });
+      return coincideTexto && coincideRol;
+    });
 
-  setClientesFiltrados(resultado);
-}, [busqueda, filtroRol, clientes]); 
+    setClientesFiltrados(resultado);
+  }, [busqueda, filtroRol, clientes]);
 
   useEffect(() => {
     buscarClientes();
     setPaginaActual(1);
-  }, [buscarClientes]);  
+  }, [buscarClientes]);
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === "Enter") {
@@ -83,11 +85,14 @@ export default function Clientes() {
   const handleCrear = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      const res = await fetch("https://backend-barbershop-production-2f88.up.railway.app/api/usuarios", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ ...formData, password: "123456" }),
-      });
+      const res = await fetch(
+        "https://backend-barbershop-production-2f88.up.railway.app/api/usuarios",
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ ...formData, password: "123456" }),
+        },
+      );
       const data = await res.json();
       if (!res.ok) throw new Error(data.message);
       Swal.fire("Éxito", data.message, "success");
@@ -115,7 +120,7 @@ export default function Clientes() {
           method: "PUT",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(clienteEditado),
-        }
+        },
       );
       Swal.fire("Actualizado", "Cliente actualizado", "success");
       setShowEditModal(false);
@@ -134,9 +139,12 @@ export default function Clientes() {
       confirmButtonText: "Sí, eliminar",
     }).then(async (result) => {
       if (result.isConfirmed) {
-        await fetch(`https://backend-barbershop-production-2f88.up.railway.app/api/usuarios/${id}`, {
-          method: "DELETE",
-        });
+        await fetch(
+          `https://backend-barbershop-production-2f88.up.railway.app/api/usuarios/${id}`,
+          {
+            method: "DELETE",
+          },
+        );
         Swal.fire("Eliminado", "El cliente fue eliminado", "success");
         fetchClientes();
       }
@@ -282,11 +290,10 @@ export default function Clientes() {
           onClose={() => setShowModal(false)}
           title="Nuevo Usuario"
         >
-          <form
-            onSubmit={handleCrear}
-            className="space-y-4 "
-          >
-            <label className="block text-sm font-bold mb-1 text-gray-900">Nombre</label>
+          <form onSubmit={handleCrear} className="space-y-4 ">
+            <label className="block text-sm font-bold mb-1 text-gray-900">
+              Nombre
+            </label>
             <input
               type="text"
               placeholder="Ingrese su Nombre"
@@ -297,7 +304,9 @@ export default function Clientes() {
               className="w-full p-2 rounded-lg bg-gray-300 focus:outline-none focus:ring-2 focus:ring-yellow-500"
               required
             />
-            <label className="block text-sm font-bold mb-1 text-gray-900">Apellido</label>
+            <label className="block text-sm font-bold mb-1 text-gray-900">
+              Apellido
+            </label>
             <input
               type="text"
               placeholder="Ingrese su Apellido"
@@ -308,7 +317,9 @@ export default function Clientes() {
               className="w-full p-2 rounded-lg bg-gray-300 focus:outline-none focus:ring-2 focus:ring-yellow-500"
               required
             />
-            <label className="block text-sm font-bold mb-1 text-gray-900">Telefono</label>
+            <label className="block text-sm font-bold mb-1 text-gray-900">
+              Telefono
+            </label>
             <input
               type="tel"
               placeholder="Ingrese su Teléfono"
@@ -321,7 +332,9 @@ export default function Clientes() {
               className="w-full p-2 rounded-lg bg-gray-300 focus:outline-none focus:ring-2 focus:ring-yellow-500"
               required
             />
-            <label className="block text-sm font-bold mb-1 text-gray-900">Correo</label>
+            <label className="block text-sm font-bold mb-1 text-gray-900">
+              Correo
+            </label>
             <input
               type="email"
               placeholder="Ingrese su Correo"
@@ -332,12 +345,15 @@ export default function Clientes() {
               className="w-full p-2 rounded-lg bg-gray-300 focus:outline-none focus:ring-2 focus:ring-yellow-500"
               required
             />
-            <label className="block text-sm font-bold mb-1 text-gray-900">Tipo de Usuario</label>
+            <label className="block text-sm font-bold mb-1 text-gray-900">
+              Tipo de Usuario
+            </label>
             <select
               value={formData.rol}
               onChange={(e) =>
                 setFormData({ ...formData, rol: e.target.value })
-              }className="w-full p-2 rounded-lg bg-gray-300 focus:outline-none focus:ring-2 focus:ring-yellow-500"
+              }
+              className="w-full p-2 rounded-lg bg-gray-300 focus:outline-none focus:ring-2 focus:ring-yellow-500"
             >
               <option value="cliente">Cliente</option>
               <option value="admin">Admin</option>
@@ -369,11 +385,10 @@ export default function Clientes() {
           onClose={() => setShowEditModal(false)}
           title="Editar Usuario"
         >
-          <form
-            onSubmit={handleEditar}
-            className="space-y-4 "
-          >
-            <label className="block text-sm font-bold mb-1 text-gray-900">Nombre</label>
+          <form onSubmit={handleEditar} className="space-y-4 ">
+            <label className="block text-sm font-bold mb-1 text-gray-900">
+              Nombre
+            </label>
             <input
               type="text"
               value={clienteEditado.nombre}
@@ -383,7 +398,9 @@ export default function Clientes() {
               className="w-full p-2 rounded-lg bg-gray-300 focus:outline-none focus:ring-2 focus:ring-yellow-500"
               required
             />
-            <label className="block text-sm font-bold mb-1 text-gray-900">Apellido</label>
+            <label className="block text-sm font-bold mb-1 text-gray-900">
+              Apellido
+            </label>
             <input
               type="text"
               value={clienteEditado.apellido}
@@ -396,7 +413,9 @@ export default function Clientes() {
               className="w-full p-2 rounded-lg bg-gray-300 focus:outline-none focus:ring-2 focus:ring-yellow-500"
               required
             />
-            <label className="block text-sm font-bold mb-1 text-gray-900">Telefono</label>
+            <label className="block text-sm font-bold mb-1 text-gray-900">
+              Telefono
+            </label>
             <input
               type="tel"
               value={clienteEditado.telefono}
@@ -409,7 +428,9 @@ export default function Clientes() {
               className="w-full p-2 rounded-lg bg-gray-300 focus:outline-none focus:ring-2 focus:ring-yellow-500"
               required
             />
-            <label className="block text-sm font-bold mb-1 text-gray-900">Correo</label>
+            <label className="block text-sm font-bold mb-1 text-gray-900">
+              Correo
+            </label>
             <input
               type="email"
               value={clienteEditado.email}
@@ -419,7 +440,9 @@ export default function Clientes() {
               className="w-full p-2 rounded-lg bg-gray-300 focus:outline-none focus:ring-2 focus:ring-yellow-500"
               required
             />
-            <label className="block text-sm font-bold mb-1 text-gray-900">Tipo de Usuario</label>
+            <label className="block text-sm font-bold mb-1 text-gray-900">
+              Tipo de Usuario
+            </label>
             <select
               value={clienteEditado.rol}
               onChange={(e) =>

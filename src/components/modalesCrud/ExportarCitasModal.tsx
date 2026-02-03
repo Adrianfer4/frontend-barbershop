@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { obtenerFechaHoy, isoToDateOnly } from "../../utils/formatoDeFechas";
 import Swal from "sweetalert2";
 
-const BASE_URL = 'https://backend-barbershop-production-2f88.up.railway.app';
+const BASE_URL = "https://backend-barbershop-production-2f88.up.railway.app";
 const API_BASE = `${BASE_URL}/api`;
 
 type Barbero = {

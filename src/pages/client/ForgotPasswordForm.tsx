@@ -1,7 +1,8 @@
 import { useState } from "react";
 import Swal from "sweetalert2";
 
-const API_BASE = 'https://backend-barbershop-production-2f88.up.railway.app/api';
+const API_BASE =
+  "https://backend-barbershop-production-2f88.up.railway.app/api";
 
 export default function ForgotPasswordForm() {
   const [email, setEmail] = useState<string>("");
