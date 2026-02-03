@@ -1,6 +1,7 @@
 "use client";
 import { useEffect, useState } from "react";
 import { Menu, X, User } from "lucide-react";
+import { Link } from "react-router-dom";
 
 type Usuario = {
   id_usuario: number;
@@ -44,17 +45,34 @@ const Navbar = () => {
     window.location.href = "/";
   };
 
-  const NavLink = ({ href, texto }: { href: string; texto: string }) => (
-    <a
-      href={href}
-      onClick={() => setMenuAbierto(false)}
-      className="text-white font-medium hover:text-black transition-colors duration-300 relative group font-[Reey] text-lg"
-      style={{ fontFamily: "Reey-Regular, cursive" }}
-    >
-      {texto}
-      <span className="block h-0.5 bg-black scale-x-0 group-hover:scale-x-100 transition-transform origin-left duration-300 mt-1" />
-    </a>
-  );
+  const NavLink = ({ href, texto }: { href: string; texto: string }) => {
+    const isRoute = href.startsWith("/");
+    if (isRoute) {
+      return (
+        <Link
+          to={href}
+          onClick={() => setMenuAbierto(false)}
+          className="text-white font-medium hover:text-black transition-colors duration-300 relative group font-[Reey] text-lg"
+          style={{ fontFamily: "Reey-Regular, cursive" }}
+        >
+          {texto}
+          <span className="block h-0.5 bg-black scale-x-0 group-hover:scale-x-100 transition-transform origin-left duration-300 mt-1" />
+        </Link>
+      );
+    } else {
+      return (
+        <a
+          href={href}
+          onClick={() => setMenuAbierto(false)}
+          className="text-white font-medium hover:text-black transition-colors duration-300 relative group font-[Reey] text-lg"
+          style={{ fontFamily: "Reey-Regular, cursive" }}
+        >
+          {texto}
+          <span className="block h-0.5 bg-black scale-x-0 group-hover:scale-x-100 transition-transform origin-left duration-300 mt-1" />
+        </a>
+      );
+    }
+  };
 
   const PerfilIcon = () => (
     <a
