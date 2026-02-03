@@ -84,7 +84,7 @@ export default function Servicios() {
 
       if (imagen) formData.append("imagen", imagen);
 
-      const res = await fetch("http://localhost:3000/api/servicios", {
+      const res = await fetch(`${API_BASE}/servicios`, {
         method: "POST",
         body: formData,
       });
@@ -173,7 +173,7 @@ export default function Servicios() {
     }).then(async (result) => {
       if (result.isConfirmed) {
         try {
-          const res = await fetch(`http://localhost:3000/api/servicios/${id}`, {
+          const res = await fetch(`${API_BASE}/servicios/${id}`, {
             method: "DELETE",
           });
 

@@ -83,7 +83,7 @@ const ModalAgendar = ({ id_servicio, setMostrarModal }: ModalProps) => {
       });
     }
 
-    const res = await fetch("http://localhost:3000/api/citas", {
+    const res = await fetch(`${API_BASE}/citas`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

@@ -48,7 +48,7 @@ http://localhost:5173
 El login y demás operaciones usan una API REST desarrollada con Node.js y MySQL. Asegúrate de que el backend esté en funcionamiento y que la URL esté correctamente configurada en el archivo services/auth.ts o en una variable de entorno si se decide centralizar.
 
 Ejemplo de base URL en un archivo de servicio:
-const API_URL = "http://localhost:3000/api";
+const API_URL = https://backend-barbershop-production-2f88.up.railway.app/api/;
 
 🧑‍💻 Autores
 Desarrollador principal: Nestor Fernandez

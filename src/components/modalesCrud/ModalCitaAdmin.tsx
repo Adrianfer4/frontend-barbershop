@@ -48,7 +48,7 @@ const ModalCitaAdmin = ({ cita, setMostrarModal, onGuardado }: ModalCitaAdminPro
       .then((res) => res.json())
       .then(setBarberos);
 
-    fetch("http://localhost:3000/api/servicios")
+    fetch(`${API_BASE}/servicios`)
       .then((res) => res.json())
       .then(setServicios);
   }, []);

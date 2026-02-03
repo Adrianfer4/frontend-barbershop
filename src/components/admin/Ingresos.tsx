@@ -88,14 +88,14 @@ export default function Ingresos() {
   }, [selectedDay, selectedMonth, selectedYear, filtro]);
 
   const fetchBarberos = async () => {
-    const res = await fetch("http://localhost:3000/api/usuarios/barberos");
+    const res = await fetch(`${API_BASE}/usuarios?rol=barbershop`);
     const data = await res.json();
     setBarberos(data);
   };
 
   const fetchServicios = async () => {
     const token = localStorage.getItem("token");
-    const res = await fetch("http://localhost:3000/api/servicios", {
+    const res = await fetch(`${API_BASE}/servicios`, {
       headers: { Authorization: `Bearer ${token}` },
     });
     const data = await res.json();

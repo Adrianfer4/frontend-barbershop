@@ -41,7 +41,7 @@ export default function Clientes() {
   const totalPaginas = Math.ceil(clientesFiltrados.length / elementosPorPagina);
 
   const fetchClientes = async () => {
-    const res = await fetch("http://localhost:3000/api/usuarios");
+    const res = await fetch("https://backend-barbershop-production-2f88.up.railway.app/api/usuarios");
     const data = await res.json();
     setClientes(data);
     setClientesFiltrados(data);
@@ -83,7 +83,7 @@ export default function Clientes() {
   const handleCrear = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      const res = await fetch("http://localhost:3000/api/usuarios", {
+      const res = await fetch("https://backend-barbershop-production-2f88.up.railway.app/api/usuarios", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ ...formData, password: "123456" }),
@@ -110,7 +110,7 @@ export default function Clientes() {
     if (!clienteEditado) return;
     try {
       await fetch(
-        `http://localhost:3000/api/usuarios/${clienteEditado.id_usuario}`,
+        `https://backend-barbershop-production-2f88.up.railway.app/api/usuarios/${clienteEditado.id_usuario}`,
         {
           method: "PUT",
           headers: { "Content-Type": "application/json" },
@@ -134,7 +134,7 @@ export default function Clientes() {
       confirmButtonText: "Sí, eliminar",
     }).then(async (result) => {
       if (result.isConfirmed) {
-        await fetch(`http://localhost:3000/api/usuarios/${id}`, {
+        await fetch(`https://backend-barbershop-production-2f88.up.railway.app/api/usuarios/${id}`, {
           method: "DELETE",
         });
         Swal.fire("Eliminado", "El cliente fue eliminado", "success");
