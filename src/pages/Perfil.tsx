@@ -3,7 +3,7 @@ import Swal from "sweetalert2";
 import { FaUserCircle } from "react-icons/fa";
 import LoaderBarbershop from "../utils/LoaderBarberia";
 
-const BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:3000";
+const BASE_URL = 'https://backend-barbershop-production-2f88.up.railway.app';
 const API_BASE = `${BASE_URL}/api`;
 
 type Usuario = {

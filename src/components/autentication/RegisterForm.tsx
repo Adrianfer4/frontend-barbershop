@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { Eye, EyeOff } from "lucide-react";
 import Swal from "sweetalert2";
 
-const API_BASE = import.meta.env.VITE_API_URL || "http://localhost:3000/api";
+const API_BASE = 'https://backend-barbershop-production-2f88.up.railway.app/api';
 
 export default function RegisterForm() {
   const [nombre, setNombre] = useState("");

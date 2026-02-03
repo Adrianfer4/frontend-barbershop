@@ -3,6 +3,8 @@ import { useNavigate } from "react-router-dom";
 import { Eye, EyeOff } from "lucide-react"; // Asegúrate de tener lucide-react instalado
 import Swal from "sweetalert2";
 
+const API_BASE = 'https://backend-barbershop-production-2f88.up.railway.app/api';
+
 export default function ResetPasswordForm() {
   const [password, setPassword] = useState<string>("");
   const [confirmar, setConfirmar] = useState<string>("");

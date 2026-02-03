@@ -3,7 +3,7 @@ import Swal from "sweetalert2";
 import GraficosIngresos from "../graficosIngresos/GraficosIngresos";
 import IngresoModal from "../modalesCrud/IngresoModal";
 
-const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:3000/api';
+const API_BASE = 'https://backend-barbershop-production-2f88.up.railway.app/api';
 
 type Ingreso = {
   id_ingreso: number;

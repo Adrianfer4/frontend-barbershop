@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { format, addDays } from "date-fns";
 import Swal from "sweetalert2";
 
-const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:3000/api';
+const API_BASE = 'https://backend-barbershop-production-2f88.up.railway.app/api';
 
 type ModalCitaAdminProps = {
   cita?: {

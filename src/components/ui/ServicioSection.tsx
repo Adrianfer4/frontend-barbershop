@@ -3,7 +3,7 @@ import ServicioCard from "./ServicioCard";
 import Swal from "sweetalert2";
 import LoaderBarbershop from "../../utils/LoaderBarberia";
 
-const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:3000/api';
+const API_BASE = 'https://backend-barbershop-production-2f88.up.railway.app/api';
 
 type Servicio = {
   id_servicio: number;
