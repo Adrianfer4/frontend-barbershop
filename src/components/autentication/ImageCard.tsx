@@ -1,7 +1,7 @@
 interface ImageCardProps {
-  imageUrl: string; 
+  imageUrl: string;
   position?: "left" | "right";
-  height?: string;        
+  height?: string;
 }
 
 export default function ImageCard({

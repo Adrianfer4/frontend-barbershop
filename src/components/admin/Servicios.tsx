@@ -203,51 +203,53 @@ export default function Servicios() {
           Gestión de Servicios
         </h1>
 
-        <table className="w-full bg-white table-auto border border-gray-300">
-          <thead className="bg-gray-100">
-            <tr>
-              <th className="p-2 border">Nombre</th>
-              <th className="p-2 border">Descripción</th>
-              <th className="p-2 border">Precio</th>
-              <th className="p-2 border">Duración</th>
-              <th className="p-2 border">Acciones</th>
-            </tr>
-          </thead>
-          <tbody>
-            {servicios.length === 0 ? (
+        <div className="overflow-x-auto max-w-full bg-white">
+          <table className="w-full table-auto border border-gray-300 text-sm">
+            <thead className="bg-gray-100">
               <tr>
-                <td colSpan={6} className="text-center p-4">
-                  No hay resultados.
-                </td>
+                <th className="p-2 border">Nombre</th>
+                <th className="p-2 border">Descripción</th>
+                <th className="p-2 border">Precio</th>
+                <th className="p-2 border">Duración</th>
+                <th className="p-2 border">Acciones</th>
               </tr>
-            ) : (
-              servicios.map((servicio) => (
-                <tr key={servicio.id_servicio} className="text-center">
-                  <td className="p-2 border">{servicio.nombre_servicio}</td>
-                  <td className="p-2 border">{servicio.descripcion}</td>
-                  <td className="p-2 border">${servicio.precio}</td>
-                  <td className="p-2 border">{servicio.duracion}</td>
-                  <td className="p-2 border">
-                    <button
-                      className="text-blue-600 hover:underline mr-2 transition"
-                      onClick={() => abrirModalEdicion(servicio)}
-                    >
-                      Editar
-                    </button>
-                    <button
-                      className="text-red-600 hover:underline"
-                      onClick={() =>
-                        handleEliminarServicio(servicio.id_servicio)
-                      }
-                    >
-                      Eliminar
-                    </button>
+            </thead>
+            <tbody>
+              {servicios.length === 0 ? (
+                <tr>
+                  <td colSpan={5} className="text-center p-4">
+                    No hay resultados.
                   </td>
                 </tr>
-              ))
-            )}
-          </tbody>
-        </table>
+              ) : (
+                servicios.map((servicio) => (
+                  <tr key={servicio.id_servicio} className="text-center">
+                    <td className="border p-2">{servicio.nombre_servicio}</td>
+                    <td className="border p-2">{servicio.descripcion}</td>
+                    <td className="border p-2">${servicio.precio}</td>
+                    <td className="border p-2">{servicio.duracion}</td>
+                    <td className="border p-2 space-x-2">
+                      <button
+                        onClick={() => abrirModalEdicion(servicio)}
+                        className="text-blue-600 hover:underline transition"
+                      >
+                        Editar
+                      </button>
+                      <button
+                        onClick={() =>
+                          handleEliminarServicio(servicio.id_servicio)
+                        }
+                        className="text-red-600 hover:underline transition"
+                      >
+                        Eliminar
+                      </button>
+                    </td>
+                  </tr>
+                ))
+              )}
+            </tbody>
+          </table>
+        </div>
 
         {/* Modal Crear */}
         <button
